@@ -1,3 +1,3 @@
 # backEnd
 # BackEnd
-create a user with username : lootin ans password : test in http://localhost/phpmyadmin/index.php when apache and mySql launch with xampp
+create a user with username : lootin and password : test in http://localhost/phpmyadmin/index.php after Apache and mySQL are launch with xampp
