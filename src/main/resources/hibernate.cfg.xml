@@ -28,6 +28,8 @@
         <!-- List of XML mapping files -->
         <mapping resource = "User.hbm.xml"/>
         <mapping resource = "Game.hbm.xml"/>
+        <mapping resource = "Match.hbm.xml"/>
+        <mapping resource = "Message.hbm.xml"/>
 <!--        <mapping resource = "Lecture.hbm.xml"/>-->
 <!--        <mapping resource = "University.hbm.xml"/>-->
 <!--        <mapping resource = "Game.hbm.xml"/>-->
