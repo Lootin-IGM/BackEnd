@@ -1,9 +1,14 @@
 package fr.uge.lootin.back;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Objects;
 
+@Embeddable
 public class Login {
+    @Column
     private String login;
+    @Column
     private String password;
 
     public Login() {

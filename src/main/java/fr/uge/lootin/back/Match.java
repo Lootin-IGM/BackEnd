@@ -1,10 +1,22 @@
 package fr.uge.lootin.back;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "_Match")
 public class Match {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @Column
     private long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user1Id")
     private User user1;
+
+    @ManyToOne
+    @JoinColumn(name = "user2Id")
     private User user2;
 
     public Match() {

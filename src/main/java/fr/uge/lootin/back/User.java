@@ -1,14 +1,32 @@
 package fr.uge.lootin.back;
 
+import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "User")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @Column
     private long id;
+
+    @Column
     private String firstName;
+
+    @Column
     private String lastName;
+
+    @ManyToMany
+    @JoinTable(name = "User_Game", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "game_id") })
     private Set<Game> games;
+
+    @Embedded
     private Login login;
+
 //    private PlayStyle playStyle; //TODO
 
 

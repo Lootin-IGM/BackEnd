@@ -1,15 +1,29 @@
 package fr.uge.lootin.back;
 
 
-import java.sql.Date;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-
+@Entity
+@Table(name = "Message")
 public class Message {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @Column(name = "id")
     private long id;
+
+    @ManyToOne
+    @JoinColumn(name = "matchId")
     private Match match;
+
+    @Column(name = "sendTime")
+    @Type(type="timestamp")
     private Timestamp sendTime;
+
+    @Column(name ="message")
     private String message;
 
 
