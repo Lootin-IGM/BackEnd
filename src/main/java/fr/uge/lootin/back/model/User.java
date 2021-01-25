@@ -1,23 +1,21 @@
-package fr.uge.lootin.back;
+package fr.uge.lootin.back.model;
 
-import org.springframework.stereotype.Component;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
-@Table(name = "User")
+@Entity(name = "User")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
-    @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column
+    @NotNull
     private String firstName;
 
-    @Column
+    @NotNull
     private String lastName;
 
     @ManyToMany

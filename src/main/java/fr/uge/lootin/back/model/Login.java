@@ -1,4 +1,6 @@
-package fr.uge.lootin.back;
+package fr.uge.lootin.back.model;
+
+import com.sun.istack.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -6,9 +8,9 @@ import java.util.Objects;
 
 @Embeddable
 public class Login {
-    @Column
+    @NotNull
     private String login;
-    @Column
+    @NotNull
     private String password;
 
     public Login() {

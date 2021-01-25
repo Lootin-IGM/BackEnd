@@ -1,18 +1,18 @@
-package fr.uge.lootin.back;
+package fr.uge.lootin.back.model;
+
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
-@Table(name = "Game")
+@Entity(name = "Game")
 public class Game {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "name")
+    @NotNull
     private String gameName;
 
     public Game() {
@@ -24,10 +24,6 @@ public class Game {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getGameName() {

@@ -1,4 +1,4 @@
-package fr.uge.lootin.back;
+package fr.uge.lootin.back.model;
 
 
 import org.hibernate.annotations.Type;
@@ -7,12 +7,10 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-@Entity
-@Table(name = "Message")
+@Entity(name = "Message")
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne

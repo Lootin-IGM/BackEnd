@@ -1,11 +1,16 @@
 package fr.uge.lootin.back;
 
-import java.util.Collections;
+import fr.uge.lootin.back.model.Game;
+import fr.uge.lootin.back.model.Login;
+import org.springframework.boot.SpringApplication;
+
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
-public class App {
+public class LootinApplication {
     public static void main(String[] args) {
+        SpringApplication.run(LootinApplication.class, args);
+        /*
         var uDAO = new UserDAO();
         var gDAO = new GameDAO();
         var matchDao = new MatchDAO();
@@ -55,6 +60,6 @@ public class App {
         System.out.println(m.size());
 
         System.out.println(msgDao.getAll().stream().map(u -> msgDao.initAllField(u.getId()).get()).collect(Collectors.toList()));
-
+    */
     }
 }
