@@ -1,4 +1,4 @@
-package fr.uge.lootin.back.model;
+package fr.uge.lootin.back.models;
 
 import com.sun.istack.NotNull;
 
@@ -14,6 +14,9 @@ public class Game {
 
     @NotNull
     private String gameName;
+
+    @NotNull
+    private String imageURL;
 
     public Game() {
     }
@@ -34,11 +37,20 @@ public class Game {
         this.gameName = gameName;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     @Override
     public String toString() {
         return "Game{" +
                 "id=" + id +
                 ", gameName='" + gameName + '\'' +
+                ", imageURL='" + imageURL + '\'' +
                 '}';
     }
 
@@ -47,11 +59,13 @@ public class Game {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Game game = (Game) o;
-        return id == game.id && Objects.equals(gameName, game.gameName);
+        return id == game.id &&
+                gameName.equals(game.gameName) &&
+                imageURL.equals(game.imageURL);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, gameName);
+        return Objects.hash(id, gameName, imageURL);
     }
 }

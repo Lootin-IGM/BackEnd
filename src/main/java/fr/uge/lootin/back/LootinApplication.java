@@ -1,12 +1,9 @@
 package fr.uge.lootin.back;
 
-import fr.uge.lootin.back.model.Game;
-import fr.uge.lootin.back.model.Login;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.HashSet;
-import java.util.stream.Collectors;
-
+@SpringBootApplication
 public class LootinApplication {
     public static void main(String[] args) {
         SpringApplication.run(LootinApplication.class, args);

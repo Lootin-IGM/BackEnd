@@ -1,9 +1,8 @@
-package fr.uge.lootin.back.model;
+package fr.uge.lootin.back.models;
 
 import com.sun.istack.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Embeddable
@@ -20,6 +19,7 @@ public class Login {
         this.login = login;
         this.password = password;
     }
+
 
     public String getLogin() {
         return login;
@@ -50,7 +50,8 @@ public class Login {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Login login1 = (Login) o;
-        return Objects.equals(login, login1.login) && Objects.equals(password, login1.password);
+        return login.equals(login1.login) &&
+                password.equals(login1.password);
     }
 
     @Override

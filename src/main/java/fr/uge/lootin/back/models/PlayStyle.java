@@ -1,4 +1,4 @@
-package fr.uge.lootin.back.model;
+package fr.uge.lootin.back.models;
 
 public enum PlayStyle {
     CASUAL,
