@@ -21,8 +21,9 @@ public class Game {
     public Game() {
     }
 
-    public Game(String gameName) {
+    public Game(String gameName, String imageURL) {
         this.gameName = gameName;
+        this.imageURL = imageURL;
     }
 
     public long getId() {

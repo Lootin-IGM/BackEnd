@@ -1,13 +1,23 @@
 package fr.uge.lootin.back.models;
 
 import com.sun.istack.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "User")
-public class User {
+public class User implements UserDetails {
+    public enum Authority {
+        USER
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -24,6 +34,10 @@ public class User {
 
     @Embedded
     private Login login;
+
+    @Enumerated(EnumType.STRING)
+    @javax.validation.constraints.NotNull
+    private Authority authority;
 
 //    private PlayStyle playStyle; //TODO
 
@@ -101,4 +115,39 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, games, login);
     }
+
+    public Authority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(authority.name()));
+    }
+
+    public String getPassword() { return login.getPassword(); }
+
+    public void setPassword(String password) {
+        login.setPassword(password);
+    }
+
+    public String getUsername() { return login.getUsername(); }
+
+    public void setUsername(String username) { login.setUsername(username); }
+
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+
+    @Override
+    public boolean isEnabled() { return true; }
 }
