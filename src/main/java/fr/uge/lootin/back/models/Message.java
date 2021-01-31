@@ -24,6 +24,17 @@ public class Message {
     @Column(name ="message")
     private String message;
 
+    @ManyToOne
+    @JoinColumn(name = "senderId")
+    private User user;
+
+
+    public Message(Match match, Timestamp sendTime, String message, User user) {
+        this.match = match;
+        this.sendTime = sendTime;
+        this.message = message;
+        this.user = user;
+    }
 
     public Message(Match match, Timestamp sendTime, String message) {
         this.match = match;
@@ -31,10 +42,8 @@ public class Message {
         this.message = message;
     }
 
-    public Message(Match match, String message) {
-        this.match = match;
-        this.sendTime = new Timestamp(System.currentTimeMillis());
-        this.message = message;
+    public Message(Match match, String message, User user) {
+        this(match, new Timestamp(System.currentTimeMillis()), message, user);
     }
 
     public Message() {
@@ -72,17 +81,25 @@ public class Message {
         this.message = message;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message1 = (Message) o;
-        return id == message1.id && Objects.equals(match, message1.match) && Objects.equals(sendTime, message1.sendTime) && Objects.equals(message, message1.message);
+        return id == message1.id && Objects.equals(match, message1.match) && Objects.equals(sendTime, message1.sendTime) && Objects.equals(message, message1.message) && Objects.equals(user, message1.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, match, sendTime, message);
+        return Objects.hash(id, match, sendTime, message, user);
     }
 
     @Override
@@ -92,6 +109,7 @@ public class Message {
                 ", match=" + match +
                 ", sendTime=" + sendTime +
                 ", message='" + message + '\'' +
-                '}' + "\n";
+                ", user=" + user +
+                '}';
     }
 }
