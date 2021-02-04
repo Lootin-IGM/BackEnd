@@ -70,7 +70,7 @@ public class AuthenticationService {
         user.setLastName(registerRequest.getLastName());
 
         Set<Game> targetSet = new HashSet<>();
-        //a améliorer avec l'Optional
+        //TODO a améliorer avec l'Optional
         registerRequest.getGames().forEach(x -> targetSet.add(gameRepository.findByGameName(x).get()));
         user.setGames(targetSet);
         userRepository.save(user);
