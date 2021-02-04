@@ -10,9 +10,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MatchRepository extends CrudRepository<Match, Long> {
-
     List<Match> findByUser1IdOrUser2Id(Long user1, Long user2, Pageable pageable);
 }
