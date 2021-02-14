@@ -35,9 +35,6 @@ public class MessageController {
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().build();
         }
-
-
-
     }
 
     @PostMapping

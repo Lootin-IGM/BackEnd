@@ -32,7 +32,7 @@ public class MessageService {
             throw new IllegalArgumentException();
         }
         var match = oMatch.get();
-        if (match.getUser1().getId() == user.getId() || match.getUser2().getId() == user.getId()){
+        if (!(match.getUser1().getId() == user.getId() || match.getUser2().getId() == user.getId())){
             throw new IllegalArgumentException();
         }
         var msg = save(new Message(match, newMessageRequest.getText(), user));
