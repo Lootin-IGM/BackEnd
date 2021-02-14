@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.*;
+import fr.uge.lootin.back.models.Match;
 import fr.uge.lootin.back.models.Message;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.MatchRepository;
@@ -26,35 +27,18 @@ public class MessageService {
     }
 
     public NewMessageResponse newMessage(NewMessageRequest newMessageRequest, User user){
-        var oMatch = matchRepository.findById(newMessageRequest.getMatchId());
-
-        if (oMatch.isEmpty()){
-            throw new IllegalArgumentException();
-        }
-        var match = oMatch.get();
-        if (!(match.getUser1().getId() == user.getId() || match.getUser2().getId() == user.getId())){
-            throw new IllegalArgumentException();
-        }
+        var match = verifyMatch(newMessageRequest.getMatchId(), user);
         var msg = save(new Message(match, newMessageRequest.getText(), user));
         MatchResponse mr;
         if (match.getUser1().getId() == user.getId()){
-            mr = new MatchResponse(match.getId(), new UserResponse(match.getUser2().getFirstName(), match.getUser2().getLastName(), match.getUser2().getLogin().getUsername()));
+            return new NewMessageResponse(match.getId(),new UserResponse(match.getUser2().getFirstName(), match.getUser2().getLastName(), match.getUser2().getLogin().getUsername()), msg.getSendTime(), msg.getMessage());
         }else{
-            mr = new MatchResponse(match.getId(),new UserResponse(match.getUser1().getFirstName(), match.getUser1().getLastName(), match.getUser1().getLogin().getUsername()));
+            return new NewMessageResponse(match.getId(),new UserResponse(match.getUser1().getFirstName(), match.getUser1().getLastName(), match.getUser1().getLogin().getUsername()), msg.getSendTime(), msg.getMessage());
         }
-        return new NewMessageResponse(mr, msg.getSendTime(), msg.getMessage());
     }
 
     public List<MessageResponse> findByMatchId(MessageRequest messageRequest, User user){
-        var oMatch = matchRepository.findById(messageRequest.getMatchId());
-
-        if (oMatch.isEmpty()){
-            return null; //maybe throw something
-        }
-        var match = oMatch.get();
-        if (match.getUser1().getId() == user.getId() || match.getUser2().getId() == user.getId()){
-            throw new IllegalArgumentException();
-        }
+        verifyMatch(messageRequest.getMatchId(), user);
         var page = PageRequest.of(messageRequest.getPage(), messageRequest.getNb(), Sort.by("sendTime").descending());
 
         var res = messageRepository.findByMatchId(messageRequest.getMatchId(), page);
@@ -64,6 +48,19 @@ public class MessageService {
             formatRes.add(new MessageResponse(m.getSendTime(), m.getMessage(), new UserResponse(u.getFirstName(), u.getLastName(), u.getLogin().getUsername())));
         }
         return formatRes;
+    }
+
+    private Match verifyMatch(Long matchId, User user) {
+        var oMatch = matchRepository.findById(matchId);
+
+        if (oMatch.isEmpty()){
+            throw new IllegalArgumentException();
+        }
+        var match = oMatch.get();
+        if (!(match.getUser1().getId() == user.getId() || match.getUser2().getId() == user.getId())){
+            throw new IllegalArgumentException();
+        }
+        return match;
     }
 
 }
