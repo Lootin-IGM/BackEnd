@@ -2,11 +2,14 @@ package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.MatchRequest;
 import fr.uge.lootin.back.dto.MatchResponse;
+import fr.uge.lootin.back.dto.MessageResponse;
 import fr.uge.lootin.back.dto.UserResponse;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.Match;
+import fr.uge.lootin.back.models.Message;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.MatchRepository;
+import fr.uge.lootin.back.repositories.MessageRepository;
 import fr.uge.lootin.back.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +24,9 @@ import java.util.Optional;
 public class MatchService {
     @Autowired
     private MatchRepository matchRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -61,12 +67,23 @@ public class MatchService {
 
         var res =  matchRepository.findByUser1IdOrUser2Id(user.getId(), user.getId(), page);
 
+        page = PageRequest.of(0, 1, Sort.by("sendTime").descending() );
+        List<Message> listMessage;
+        Message lastMessage;
+        MessageResponse messageResponse;
         var formatRes = new ArrayList<MatchResponse>();
         for (var m  : res){
-            if (m.getUser1().getId() == user.getId()){
-                formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2().getFirstName(), m.getUser2().getLastName(), m.getUser2().getLogin().getUsername())));
+            listMessage = messageRepository.findByMatchId(m.getId(), page);
+            if(!listMessage.isEmpty()){
+                lastMessage = listMessage.get(0);
+                messageResponse = new MessageResponse(lastMessage.getSendTime(), lastMessage.getMessage(), new UserResponse(lastMessage.getUser().getFirstName(), lastMessage.getUser().getLastName(), lastMessage.getUser().getLogin().getUsername()));
             }else{
-                formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1().getFirstName(), m.getUser1().getLastName(), m.getUser1().getLogin().getUsername())));
+                messageResponse = null;
+            }
+            if (m.getUser1().getId() == user.getId()){
+                formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2().getFirstName(), m.getUser2().getLastName(), m.getUser2().getLogin().getUsername()), messageResponse));
+            }else{
+                formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1().getFirstName(), m.getUser1().getLastName(), m.getUser1().getLogin().getUsername()), messageResponse));
             }
         }
 

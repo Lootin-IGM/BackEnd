@@ -3,12 +3,12 @@ package fr.uge.lootin.back.dto;
 public class MatchResponse {
     private Long id;
     private UserResponse user;
-    //TODO add last message of match
+    private MessageResponse lastMessage;
 
-
-    public MatchResponse(Long id, UserResponse user) {
+    public MatchResponse(Long id, UserResponse user, MessageResponse lastMessage) {
         this.id = id;
         this.user = user;
+        this.lastMessage = lastMessage;
     }
 
     public Long getId() {
@@ -25,5 +25,13 @@ public class MatchResponse {
 
     public void setUser(UserResponse user) {
         this.user = user;
+    }
+
+    public MessageResponse getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(MessageResponse lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }
