@@ -1,14 +1,24 @@
 package fr.uge.lootin.back.dto;
 
 public class UserResponse {
+    private Long id;
     private String firstName;
     private String lastName;
     private String login;
 
-    public UserResponse(String firstName, String lastName, String login) {
+    public UserResponse(Long id, String firstName, String lastName, String login) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {

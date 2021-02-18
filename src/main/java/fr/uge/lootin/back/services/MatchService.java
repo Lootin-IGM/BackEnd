@@ -76,14 +76,14 @@ public class MatchService {
             listMessage = messageRepository.findByMatchId(m.getId(), page);
             if(!listMessage.isEmpty()){
                 lastMessage = listMessage.get(0);
-                messageResponse = new MessageResponse(lastMessage.getSendTime(), lastMessage.getMessage(), new UserResponse(lastMessage.getUser().getFirstName(), lastMessage.getUser().getLastName(), lastMessage.getUser().getLogin().getUsername()));
+                messageResponse = new MessageResponse(lastMessage.getSendTime(), lastMessage.getMessage(), new UserResponse(lastMessage.getUser().getId(), lastMessage.getUser().getFirstName(), lastMessage.getUser().getLastName(), lastMessage.getUser().getLogin().getUsername()));
             }else{
                 messageResponse = null;
             }
             if (m.getUser1().getId() == user.getId()){
-                formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2().getFirstName(), m.getUser2().getLastName(), m.getUser2().getLogin().getUsername()), messageResponse));
+                formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2().getId(), m.getUser2().getFirstName(), m.getUser2().getLastName(), m.getUser2().getLogin().getUsername()), messageResponse));
             }else{
-                formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1().getFirstName(), m.getUser1().getLastName(), m.getUser1().getLogin().getUsername()), messageResponse));
+                formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1().getId(), m.getUser1().getFirstName(), m.getUser1().getLastName(), m.getUser1().getLogin().getUsername()), messageResponse));
             }
         }
 

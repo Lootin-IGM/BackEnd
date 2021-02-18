@@ -31,9 +31,9 @@ public class MessageService {
         var msg = save(new Message(match, newMessageRequest.getText(), user));
         MatchResponse mr;
         if (match.getUser1().getId() == user.getId()){
-            return new NewMessageResponse(match.getId(),new UserResponse(match.getUser2().getFirstName(), match.getUser2().getLastName(), match.getUser2().getLogin().getUsername()), msg.getSendTime(), msg.getMessage());
+            return new NewMessageResponse(match.getId(),new UserResponse(match.getUser2().getId(), match.getUser2().getFirstName(), match.getUser2().getLastName(), match.getUser2().getLogin().getUsername()), msg.getSendTime(), msg.getMessage());
         }else{
-            return new NewMessageResponse(match.getId(),new UserResponse(match.getUser1().getFirstName(), match.getUser1().getLastName(), match.getUser1().getLogin().getUsername()), msg.getSendTime(), msg.getMessage());
+            return new NewMessageResponse(match.getId(),new UserResponse(match.getUser1().getId(), match.getUser1().getFirstName(), match.getUser1().getLastName(), match.getUser1().getLogin().getUsername()), msg.getSendTime(), msg.getMessage());
         }
     }
 
@@ -45,7 +45,7 @@ public class MessageService {
         var formatRes = new ArrayList<MessageResponse>();
         for (var m  : res){
             var u = m.getUser();
-            formatRes.add(new MessageResponse(m.getSendTime(), m.getMessage(), new UserResponse(u.getFirstName(), u.getLastName(), u.getLogin().getUsername())));
+            formatRes.add(new MessageResponse(m.getSendTime(), m.getMessage(), new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getLogin().getUsername())));
         }
         return formatRes;
     }

@@ -25,7 +25,7 @@ public class ProfileService {
 
         for (var u : tmp) {
             if (u.getId() != user.getId()) {
-                users.add( new UserResponse(u.getFirstName(), u.getLastName(), u.getLogin().getUsername()));
+                users.add( new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getLogin().getUsername()));
             }
         }
         res.setUsers(users);
