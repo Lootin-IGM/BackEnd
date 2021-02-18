@@ -7,6 +7,9 @@ public class LikeRequest {
         this.userLikedId = userLikedId;
     }
 
+    public LikeRequest() {
+    }
+
     public Long getUserLikedId() {
         return userLikedId;
     }

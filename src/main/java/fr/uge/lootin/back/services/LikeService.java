@@ -26,9 +26,16 @@ public class LikeService {
     private MatchRepository matchRepository;
 
     public LikeResponse addLike(User user, Long userIdLiked) {
+        if (user.getId() == userIdLiked) {
+            return new LikeResponse(false, false);
+        }
         var testLike = likeRepository.findByUserIdAndUserLikedId(user.getId(), userIdLiked);
         var testMatch = likeRepository.findByUserIdAndUserLikedId(userIdLiked, user.getId());
-        var userLiked = userRepository.findById(userIdLiked).get();
+        var userLikedOpt = userRepository.findById(userIdLiked);
+        if (userLikedOpt.isEmpty()){
+            return new LikeResponse(false, true);
+        }
+        var userLiked = userLikedOpt.get();
         if (!testMatch.isEmpty()){
             likeRepository.save(new Like(user, userLiked));
             createMatch(user, userLiked);
