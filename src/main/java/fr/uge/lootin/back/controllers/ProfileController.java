@@ -1,5 +1,6 @@
 package fr.uge.lootin.back.controllers;
 
+import fr.uge.lootin.back.dto.FullProfileResponse;
 import fr.uge.lootin.back.dto.LiteProfileResponse;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.services.ProfileService;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +24,12 @@ public class ProfileController {
     public ResponseEntity<LiteProfileResponse> getLiteProfile() {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var res = profileService.getLiteProfile(user);
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("full")
+    public ResponseEntity<FullProfileResponse> getFullProfileById(@RequestBody Long id) {
+        var res = profileService.getFullProfileById(id);
         return ResponseEntity.ok(res);
     }
 }

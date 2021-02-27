@@ -1,5 +1,6 @@
 package fr.uge.lootin.back.services;
 
+import fr.uge.lootin.back.dto.FullProfileResponse;
 import fr.uge.lootin.back.dto.LiteProfileResponse;
 import fr.uge.lootin.back.dto.UserResponse;
 import fr.uge.lootin.back.models.User;
@@ -34,5 +35,10 @@ public class ProfileService {
         }
         res.setUsers(users);
         return res;
+    }
+
+    public FullProfileResponse getFullProfileById(Long id) {
+        var user = userRepository.findById(id).get();
+        return new FullProfileResponse(id, user.getFirstName(), user.getLastName(), user.getUsername(), user.getGames());
     }
 }
