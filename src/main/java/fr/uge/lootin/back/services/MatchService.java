@@ -76,7 +76,7 @@ public class MatchService {
             listMessage = messageRepository.findByMatchId(m.getId(), page);
             if(!listMessage.isEmpty()){
                 lastMessage = listMessage.get(0);
-                messageResponse = new MessageResponse(lastMessage.getSendTime(), lastMessage.getMessage(), new UserResponse(lastMessage.getUser().getId(), lastMessage.getUser().getFirstName(), lastMessage.getUser().getLastName(), lastMessage.getUser().getLogin().getUsername()));
+                messageResponse = new MessageResponse(lastMessage.getId(), lastMessage.getSendTime(), lastMessage.getMessage(), new UserResponse(lastMessage.getUser().getId(), lastMessage.getUser().getFirstName(), lastMessage.getUser().getLastName(), lastMessage.getUser().getLogin().getUsername()));
             }else{
                 messageResponse = null;
             }

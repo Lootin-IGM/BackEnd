@@ -46,6 +46,11 @@ public class MessageController {
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().build();
         }
-
     }
+
+    @PostMapping("/getMsg")
+    public ResponseEntity<MessageResponse> getMessageById(@RequestBody Long id){
+        return ResponseEntity.ok(messageService.getById(id));
+    }
+
 }

@@ -45,7 +45,7 @@ public class MessageService {
         var formatRes = new ArrayList<MessageResponse>();
         for (var m  : res){
             var u = m.getUser();
-            formatRes.add(new MessageResponse(m.getSendTime(), m.getMessage(), new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getLogin().getUsername())));
+            formatRes.add(new MessageResponse(m.getId(), m.getSendTime(), m.getMessage(), new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getLogin().getUsername())));
         }
         return formatRes;
     }
@@ -63,4 +63,8 @@ public class MessageService {
         return match;
     }
 
+    public MessageResponse getById(Long id) {
+        var msg = messageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        return new MessageResponse(msg.getId(), msg.getSendTime(), msg.getMessage(), new UserResponse(msg.getUser().getId(), msg.getUser().getFirstName(), msg.getUser().getLastName(), msg.getUser().getLogin().getUsername()));
+    }
 }
