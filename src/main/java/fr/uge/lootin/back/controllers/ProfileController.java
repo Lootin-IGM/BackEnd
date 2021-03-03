@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Validated
@@ -20,16 +17,16 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @PostMapping
-    public ResponseEntity<LiteProfileResponse> getLiteProfile() {
+    @GetMapping
+    public ResponseEntity<LiteProfileResponse> getLiteProfiles() {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var res = profileService.getLiteProfile(user);
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping("full")
-    public ResponseEntity<FullProfileResponse> getFullProfileById(@RequestBody Long id) {
-        var res = profileService.getFullProfileById(id);
+    @GetMapping("full/{id}")
+    public ResponseEntity<FullProfileResponse> getFullProfileById(@PathVariable String id) {
+        var res = profileService.getFullProfileById(Long.valueOf(id));
         return ResponseEntity.ok(res);
     }
 }
