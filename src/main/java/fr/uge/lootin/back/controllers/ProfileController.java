@@ -27,6 +27,7 @@ public class ProfileController {
     @GetMapping("full/{id}")
     public ResponseEntity<FullProfileResponse> getFullProfileById(@PathVariable String id) {
         var res = profileService.getFullProfileById(Long.valueOf(id));
+
         return ResponseEntity.ok(res);
     }
 }
