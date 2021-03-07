@@ -7,6 +7,9 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String login;
+    private String description;
+    private int age;
+    private String gender;
 
     public UserResponse(Long id, String firstName, String lastName, String login) {
         this.id = id;
@@ -20,6 +23,9 @@ public class UserResponse {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.login = user.getUsername();
+        this.description = user.getDescription();
+        this.age = user.getAge();
+        this.gender = user.getGender().toString(); 
     }
 
     public Long getId() {

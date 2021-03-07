@@ -11,6 +11,9 @@ public class FullProfileResponse {
     private String lastName;
     private String login;
     private Set<Game> games;
+    private String description;
+    private int age;
+    private String gender;
 
     public FullProfileResponse(Long id, String firstName, String lastName, String login, Set<Game> games) {
         this.id = id;
@@ -26,6 +29,9 @@ public class FullProfileResponse {
         this.lastName = user.getLastName();
         this.login = user.getUsername();
         this.games = user.getGames();
+        this.description = user.getDescription();
+        this.age = user.getAge();
+        this.gender = user.getGender().toString();
     }
 
     public Long getId() {

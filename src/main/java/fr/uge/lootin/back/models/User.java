@@ -109,11 +109,11 @@ public class User implements UserDetails {
         this.login = login;
     }
 
-    public Gender getSexe() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setSexe(Gender gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
