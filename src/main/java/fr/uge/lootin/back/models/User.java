@@ -1,7 +1,6 @@
 package fr.uge.lootin.back.models;
 
 import com.sun.istack.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +15,11 @@ import java.util.Set;
 public class User implements UserDetails {
     public enum Authority {
         USER
+    }
+
+    public enum Gender {
+        FEMALE,
+        MALE
     }
 
     @Id
@@ -39,17 +43,30 @@ public class User implements UserDetails {
     @javax.validation.constraints.NotNull
     private Authority authority;
 
-//    private PlayStyle playStyle; //TODO
+    @Enumerated(EnumType.STRING)
+    @javax.validation.constraints.NotNull
+    private Gender gender;
+
+    @NotNull
+    private int age;
+
+    @NotNull
+    private String description;
+
+    //TODO picture
 
 
     public User() {
     }
 
-    public User(String firstName, String lastName, Set<Game> games, Login login) {
+    public User(String firstName, String lastName, Set<Game> games, Login login, Gender gender, int age, String description) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.games = games;
         this.login = login;
+        this.gender = gender;
+        this.age = age;
+        this.description = description;
     }
 
     public long getId() {
@@ -92,6 +109,43 @@ public class User implements UserDetails {
         this.login = login;
     }
 
+    public Gender getSexe() {
+        return gender;
+    }
+
+    public void setSexe(Gender gender) {
+        this.gender = gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && age == user.age && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(games, user.games) && Objects.equals(login, user.login) && authority == user.authority && gender == user.gender && Objects.equals(description, user.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, games, login, authority, gender, age, description);
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -100,20 +154,11 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 ", games=" + games +
                 ", login=" + login +
+                ", authority=" + authority +
+                ", gender=" + gender +
+                ", age=" + age +
+                ", description='" + description + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(games, user.games) && Objects.equals(login, user.login);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, games, login);
     }
 
     public Authority getAuthority() {

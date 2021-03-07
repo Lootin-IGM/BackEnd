@@ -68,6 +68,14 @@ public class AuthenticationService {
         user.setLogin(login);
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
+        user.setDescription(registerRequest.getDescription());
+        user.setAge(registerRequest.getAge());
+        if (registerRequest.getSexe().equals("F")) {
+            user.setSexe(User.Gender.FEMALE);
+        }else{
+            user.setSexe(User.Gender.MALE);
+        }
+
 
         Set<Game> targetSet = new HashSet<>();
         //TODO a améliorer avec l'Optional
