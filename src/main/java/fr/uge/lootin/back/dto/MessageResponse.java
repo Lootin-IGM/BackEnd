@@ -1,5 +1,7 @@
 package fr.uge.lootin.back.dto;
 
+import fr.uge.lootin.back.models.Message;
+
 import java.sql.Timestamp;
 
 public class MessageResponse {
@@ -15,6 +17,13 @@ public class MessageResponse {
         this.sendTime = sendTime;
         this.message = message;
         this.sender = sender;
+    }
+
+    public MessageResponse(Message message) {
+        this.id = message.getId();
+        this.sender = new UserResponse(message.getUser());
+        this.sendTime = message.getSendTime();
+        this.message = message.getMessage();
     }
 
 

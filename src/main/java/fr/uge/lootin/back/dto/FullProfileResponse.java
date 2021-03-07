@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.dto;
 
 import fr.uge.lootin.back.models.Game;
+import fr.uge.lootin.back.models.User;
 
 import java.util.Set;
 
@@ -17,6 +18,14 @@ public class FullProfileResponse {
         this.lastName = lastName;
         this.login = login;
         this.games = games;
+    }
+
+    public FullProfileResponse(User user) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.login = user.getUsername();
+        this.games = user.getGames();
     }
 
     public Long getId() {

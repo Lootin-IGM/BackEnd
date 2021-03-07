@@ -28,7 +28,7 @@ public class ProfileService {
         var cpt = 0;
         for (var u : tmp) {
             if (u.getId() != user.getId()) {
-                users.add( new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getLogin().getUsername()));
+                users.add( new UserResponse(u));
                 ++cpt;
             }
             if (cpt == 20) break;
@@ -39,6 +39,6 @@ public class ProfileService {
 
     public FullProfileResponse getFullProfileById(Long id) {
         var user = userRepository.findById(id).get();
-        return new FullProfileResponse(id, user.getFirstName(), user.getLastName(), user.getUsername(), user.getGames());
+        return new FullProfileResponse(user);
     }
 }

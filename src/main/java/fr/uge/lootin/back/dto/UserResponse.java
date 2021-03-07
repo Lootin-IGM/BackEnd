@@ -1,5 +1,7 @@
 package fr.uge.lootin.back.dto;
 
+import fr.uge.lootin.back.models.User;
+
 public class UserResponse {
     private Long id;
     private String firstName;
@@ -11,6 +13,13 @@ public class UserResponse {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
+    }
+
+    public UserResponse(User user) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.login = user.getUsername();
     }
 
     public Long getId() {

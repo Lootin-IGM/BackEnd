@@ -31,9 +31,9 @@ public class MessageService {
         var msg = save(new Message(match, newMessageRequest.getText(), user));
         MatchResponse mr;
         if (match.getUser1().getId() == user.getId()){
-            return new NewMessageResponse(match.getId(),new UserResponse(match.getUser2().getId(), match.getUser2().getFirstName(), match.getUser2().getLastName(), match.getUser2().getLogin().getUsername()), msg.getSendTime(), msg.getMessage());
+            return new NewMessageResponse(msg, match.getUser2());
         }else{
-            return new NewMessageResponse(match.getId(),new UserResponse(match.getUser1().getId(), match.getUser1().getFirstName(), match.getUser1().getLastName(), match.getUser1().getLogin().getUsername()), msg.getSendTime(), msg.getMessage());
+            return new NewMessageResponse(msg, match.getUser1());
         }
     }
 
@@ -44,8 +44,7 @@ public class MessageService {
         var res = messageRepository.findByMatchId(messageRequest.getMatchId(), page);
         var formatRes = new ArrayList<MessageResponse>();
         for (var m  : res){
-            var u = m.getUser();
-            formatRes.add(new MessageResponse(m.getId(), m.getSendTime(), m.getMessage(), new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getLogin().getUsername())));
+            formatRes.add(new MessageResponse(m));
         }
         return formatRes;
     }
@@ -65,6 +64,6 @@ public class MessageService {
 
     public MessageResponse getById(Long id) {
         var msg = messageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
-        return new MessageResponse(msg.getId(), msg.getSendTime(), msg.getMessage(), new UserResponse(msg.getUser().getId(), msg.getUser().getFirstName(), msg.getUser().getLastName(), msg.getUser().getLogin().getUsername()));
+        return new MessageResponse(msg);
     }
 }
