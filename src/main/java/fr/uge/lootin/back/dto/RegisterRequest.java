@@ -1,8 +1,6 @@
 package fr.uge.lootin.back.dto;
 
 
-import fr.uge.lootin.back.models.User;
-
 import java.util.List;
 
 public class RegisterRequest {
@@ -13,9 +11,9 @@ public class RegisterRequest {
     private List<String> games;
     private String description;
     private int age;
-    private String sexe;
+    private String gender;
 
-    public RegisterRequest(String username, String password, String firstName, String lastName, List<String> games, String description, int age, String sexe) {
+    public RegisterRequest(String username, String password, String firstName, String lastName, List<String> games, String description, int age, String gender) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -23,7 +21,7 @@ public class RegisterRequest {
         this.games = games;
         this.description = description;
         this.age = age;
-        this.sexe = sexe;
+        this.gender = gender;
     }
 
     public RegisterRequest() {
@@ -73,11 +71,11 @@ public class RegisterRequest {
         this.age = age;
     }
 
-    public String getSexe() {
-        return sexe;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSexe(String sexe) {
-        this.sexe = sexe;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }
