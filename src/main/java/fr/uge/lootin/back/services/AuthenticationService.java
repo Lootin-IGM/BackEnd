@@ -70,7 +70,7 @@ public class AuthenticationService {
         user.setLastName(registerRequest.getLastName());
         user.setDescription(registerRequest.getDescription());
         user.setAge(registerRequest.getAge());
-        if (registerRequest.getSexe().equals("F")) {
+        if (registerRequest.getGender().equals("F")) {
             user.setGender(User.Gender.FEMALE);
         }else{
             user.setGender(User.Gender.MALE);
