@@ -15,15 +15,16 @@ public class Game {
     @NotNull
     private String gameName;
 
-    @NotNull
-    private String imageURL;
+    @ManyToOne
+    @JoinColumn(name = "imageId")
+    private Image image;
 
     public Game() {
     }
 
-    public Game(String gameName, String imageURL) {
+    public Game(String gameName, Image image) {
         this.gameName = gameName;
-        this.imageURL = imageURL;
+        this.image = image;
     }
 
     public long getId() {
@@ -38,12 +39,12 @@ public class Game {
         this.gameName = gameName;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class Game {
         return "Game{" +
                 "id=" + id +
                 ", gameName='" + gameName + '\'' +
-                ", imageURL='" + imageURL + '\'' +
+                ", image=" + image +
                 '}';
     }
 
@@ -62,11 +63,11 @@ public class Game {
         Game game = (Game) o;
         return id == game.id &&
                 gameName.equals(game.gameName) &&
-                imageURL.equals(game.imageURL);
+                image.equals(game.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, gameName, imageURL);
+        return Objects.hash(id, gameName, image);
     }
 }

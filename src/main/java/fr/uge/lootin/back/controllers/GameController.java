@@ -1,5 +1,6 @@
 package fr.uge.lootin.back.controllers;
 
+import fr.uge.lootin.back.dto.GameDto;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class GameController {
     private GameService gameService;
 
     @PostMapping
-    public ResponseEntity<Game> createGame(@Valid @RequestBody Game game) {
+    public ResponseEntity<Game> createGame(@Valid @RequestBody GameDto game) {
         return ResponseEntity.status(HttpStatus.CREATED).body(gameService.save(game));
     }
 
