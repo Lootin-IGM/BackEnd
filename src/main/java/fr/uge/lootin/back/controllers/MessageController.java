@@ -7,23 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/msg")
+@RequestMapping("/messages")
 public class MessageController {
 
     @Autowired
     private MessageService messageService;
 
-    @PostMapping("/newMessage")
+    /**
+     *
+     * @param newMessageRequest contains
+     * @return
+     */
+    @PostMapping
     public ResponseEntity<NewMessageResponse> newMessage(@Valid @RequestBody NewMessageRequest newMessageRequest){
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try{
@@ -34,19 +37,31 @@ public class MessageController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<ListMessageResponse> getMsgPage(@Valid @RequestBody MessageRequest messageRequest) {
+    /**
+     *
+     * @param matchId
+     * @param page
+     * @param nb
+     * @return
+     */
+    @GetMapping("/{matchId}/{nb}/{page}")
+    public ResponseEntity<ListMessageResponse> getMsgPage(@PathVariable Long matchId, @PathVariable Integer page, @PathVariable Integer nb) {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            var res = messageService.findByMatchId(messageRequest, user);
+            var res = messageService.findByMatchId(new MessageRequest(nb, page, matchId), user);
             return ResponseEntity.ok(new ListMessageResponse(res));
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().build();
         }
     }
 
-    @PostMapping("/getMsg")
-    public ResponseEntity<MessageResponse> getMessageById(@RequestBody Long id){
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<MessageResponse> getMessageById(@PathVariable Long id){
         return ResponseEntity.ok(messageService.getById(id));
     }
 
