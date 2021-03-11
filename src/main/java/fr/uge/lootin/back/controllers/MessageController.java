@@ -1,9 +1,6 @@
 package fr.uge.lootin.back.controllers;
 
-import fr.uge.lootin.back.dto.MessageRequest;
-import fr.uge.lootin.back.dto.MessageResponse;
-import fr.uge.lootin.back.dto.NewMessageRequest;
-import fr.uge.lootin.back.dto.NewMessageResponse;
+import fr.uge.lootin.back.dto.*;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +35,11 @@ public class MessageController {
     }
 
     @PostMapping
-    public ResponseEntity<List<MessageResponse>> getMsgPage(@Valid @RequestBody MessageRequest messageRequest) {
+    public ResponseEntity<ListMessageResponse> getMsgPage(@Valid @RequestBody MessageRequest messageRequest) {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             var res = messageService.findByMatchId(messageRequest, user);
-            return ResponseEntity.ok(res);
+            return ResponseEntity.ok(new ListMessageResponse(res));
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().build();
         }
