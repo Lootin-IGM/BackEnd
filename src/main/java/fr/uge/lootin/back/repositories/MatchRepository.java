@@ -16,4 +16,6 @@ public interface MatchRepository extends CrudRepository<Match, Long> {
 
     @Query("from _Match m where (m.user1.id = :user1 and m.user2.id = :user2) or (m.user2.id = :user1 and m.user1.id = :user2) ")
     Optional<Match> findMatch(@Param("user1") Long user1, @Param("user2") Long user2);
+
+
 }

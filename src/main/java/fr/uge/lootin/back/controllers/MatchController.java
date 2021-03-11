@@ -33,5 +33,17 @@ public class MatchController {
         return ResponseEntity.ok(matchService.getMatchesPage(user, matchRequest));
     }
 
+    @PostMapping("/empty")
+    public ResponseEntity<List<MatchResponse>> getEmptyMatchesPage(@Valid @RequestBody MatchRequest matchRequest) {
+        var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(matchService.getEmptyMatchesPage(user, matchRequest));
+    }
+
+    @PostMapping("/lastMsg")
+    public ResponseEntity<List<MatchResponse>> getMatchesLastMsgPage(@Valid @RequestBody MatchRequest matchRequest) {
+        var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(matchService.getMatchesLastMsgPage(user, matchRequest));
+    }
+
 
 }
