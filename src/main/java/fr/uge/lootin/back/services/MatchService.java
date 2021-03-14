@@ -91,69 +91,48 @@ public class MatchService {
     }
 
     public List<MatchResponse> getEmptyMatchesPage(User user, MatchRequest matchRequest) {
-        var page = matchRequest.getPage();
-        var pageRequest = PageRequest.of(page, matchRequest.getNbMatches(), Sort.by("id").descending());
+        var page = PageRequest.of(matchRequest.getPage(), matchRequest.getNbMatches(), Sort.by("id").descending());
 
-        var res =  matchRepository.findByUser1IdOrUser2Id(user.getId(), user.getId(), pageRequest);
+        var res = matchRepository.getEmptyMatches(user.getId(),page);
 
-        var pageRequestMsg = PageRequest.of(0, 1, Sort.by("sendTime").descending() );
-        List<Message> listMessage;
         var formatRes = new ArrayList<MatchResponse>();
-        while (formatRes.size() < matchRequest.getNbMatches() && res.size() > 0){
-            for (var m  : res){
-                listMessage = messageRepository.findByMatchId(m.getId(), pageRequestMsg);
-                if(listMessage.isEmpty()){
-                    if (m.getUser1().getId() == user.getId()){
-                        formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2()),  null));
-                    }else{
-                        formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1()), null));
-                    }
-                }
+
+        for (var m  : res){
+            if (m.getUser1().getId() == user.getId()){
+                formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2()), null));
+            }else{
+                formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1()), null));
             }
-            page++;
-            pageRequest = PageRequest.of(page, matchRequest.getNbMatches(), Sort.by("id").descending());
-            res = matchRepository.findByUser1IdOrUser2Id(user.getId(), user.getId(), pageRequest);
         }
         return formatRes;
     }
 
-    public List<MatchResponse> getMatchesLastMsgPage(User user, MatchRequest matchRequest) {
-        var page = matchRequest.getPage();
-        var pageRequest = PageRequest.of(page, matchRequest.getNbMatches(), Sort.by("id").descending());
-        var loop = 0;
-        var res =  matchRepository.findByUser1IdOrUser2Id(user.getId(), user.getId(), pageRequest);
-        System.out.println(res.size());
-        var pageRequestMsg = PageRequest.of(0, 1, Sort.by("sendTime").descending() );
+
+    public List<MatchResponse> getMatchesLastMsgPage(User user, MatchRequest matchRequest){
+        var page = PageRequest.of(matchRequest.getPage(), matchRequest.getNbMatches(), Sort.by("msg.sendTime").descending());
+
+        var res =  matchRepository.getMatchesLastMsg(user.getId(), page);
+
         List<Message> listMessage;
+        Message lastMessage;
+        MessageResponse messageResponse;
         var formatRes = new ArrayList<MatchResponse>();
-        while (formatRes.size() < matchRequest.getNbMatches() && res.size() > 0){
-            System.out.println("loop : " + loop);
-            System.out.println("formatRes.size() : " + formatRes.size());
-
-            System.out.println("in loop : size : " + res.size());
-
-            for (var m  : res){
-                System.out.println("match id : " + m.getId());
-                listMessage = messageRepository.findByMatch_Id(m.getId(), pageRequestMsg);
-                System.out.println(listMessage);
-                if(!listMessage.isEmpty()){
-                    System.out.println("message ok for match " + m.getId());
-                    if (m.getUser1().getId() == user.getId()){
-                        formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2()), new MessageResponse(listMessage.get(0))));
-                    }else{
-                        formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1()), new MessageResponse(listMessage.get(0))));
-                    }
-                }
+        for (var m  : res){
+            listMessage = messageRepository.findByMatch_IdOrderBySendTimeDesc(m.getId());
+            if(!listMessage.isEmpty()){
+                lastMessage = listMessage.get(0);
+                messageResponse = new MessageResponse(lastMessage);
+            }else{
+                messageResponse = null;
             }
-            page++;
-            pageRequest = PageRequest.of(page, matchRequest.getNbMatches(), Sort.by("id").descending());
-            res = matchRepository.findByUser1IdOrUser2Id(user.getId(), user.getId(), pageRequest);
-            loop++;
+            if (m.getUser1().getId() == user.getId()){
+                formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2()), messageResponse));
+            }else{
+                formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1()), messageResponse));
+            }
         }
-        System.out.println("loop : " + loop);
-        System.out.println("formatRes.size() : " + formatRes.size());
 
-        System.out.println("after loop : size : " + res.size());
         return formatRes;
     }
+
 }
