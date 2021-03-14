@@ -3,6 +3,7 @@ package fr.uge.lootin.back.dto;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.User;
 
+import java.util.Base64;
 import java.util.Set;
 
 public class FullProfileResponse {
@@ -11,16 +12,18 @@ public class FullProfileResponse {
     private String lastName;
     private String login;
     private Set<Game> games;
+    private String image;
     private String description;
     private int age;
     private String gender;
 
-    public FullProfileResponse(Long id, String firstName, String lastName, String login, Set<Game> games) {
+    public FullProfileResponse(Long id, String firstName, String lastName, String login, Set<Game> games, String image) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
         this.games = games;
+        this.image = image;
     }
 
     public FullProfileResponse(User user) {
@@ -32,6 +35,15 @@ public class FullProfileResponse {
         this.description = user.getDescription();
         this.age = user.getAge();
         this.gender = user.getGender().toString();
+        this.image = Base64.getEncoder().encodeToString(user.getImage().getImage());
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Long getId() {

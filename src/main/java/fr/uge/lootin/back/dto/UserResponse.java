@@ -2,20 +2,21 @@ package fr.uge.lootin.back.dto;
 
 import fr.uge.lootin.back.models.User;
 
+import java.util.Base64;
+
 public class UserResponse {
     private Long id;
     private String firstName;
     private String lastName;
     private String login;
-    private String description;
-    private int age;
-    private String gender;
+    private String image;
 
-    public UserResponse(Long id, String firstName, String lastName, String login) {
+    public UserResponse(Long id, String firstName, String lastName, String login, String image) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
+        this.image = image;
     }
 
     public UserResponse(User user) {
@@ -23,9 +24,7 @@ public class UserResponse {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.login = user.getUsername();
-        this.description = user.getDescription();
-        this.age = user.getAge();
-        this.gender = user.getGender().toString(); 
+        this.image = Base64.getEncoder().encodeToString(user.getImage().getImage());
     }
 
     public Long getId() {
@@ -58,5 +57,13 @@ public class UserResponse {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
     }
 }
