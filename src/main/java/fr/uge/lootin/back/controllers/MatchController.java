@@ -1,5 +1,6 @@
 package fr.uge.lootin.back.controllers;
 
+import fr.uge.lootin.back.dto.ListMatches;
 import fr.uge.lootin.back.dto.MatchRequest;
 import fr.uge.lootin.back.dto.MatchResponse;
 import fr.uge.lootin.back.models.Match;
@@ -31,6 +32,18 @@ public class MatchController {
     public ResponseEntity<List<MatchResponse>> getMatchesPage(@Valid @RequestBody MatchRequest matchRequest) {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(matchService.getMatchesPage(user, matchRequest));
+    }
+
+    @PostMapping("/empty")
+    public ResponseEntity<ListMatches> getEmptyMatchesPage(@Valid @RequestBody MatchRequest matchRequest) {
+        var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(new ListMatches(matchService.getEmptyMatchesPage(user, matchRequest)));
+    }
+
+    @PostMapping("/lastMsg")
+    public ResponseEntity<ListMatches> getMatchesLastMsgPage(@Valid @RequestBody MatchRequest matchRequest) {
+        var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(new ListMatches(matchService.getMatchesLastMsgPage(user, matchRequest)));
     }
 
 
