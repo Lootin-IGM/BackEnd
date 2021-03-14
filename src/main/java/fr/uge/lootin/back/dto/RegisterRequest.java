@@ -1,9 +1,13 @@
 package fr.uge.lootin.back.dto;
 
 
+import fr.uge.lootin.back.models.Attraction;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 public class RegisterRequest {
+    private MultipartFile file;
     private String username;
     private String password;
     private String firstName;
@@ -12,8 +16,9 @@ public class RegisterRequest {
     private String description;
     private int age;
     private String gender;
+    private Attraction attraction;
 
-    public RegisterRequest(String username, String password, String firstName, String lastName, List<String> games, String description, int age, String gender) {
+    public RegisterRequest(String username, String password, String firstName, String lastName, List<String> games, String description, int age, String gender, MultipartFile file, Attraction attraction) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -22,9 +27,27 @@ public class RegisterRequest {
         this.description = description;
         this.age = age;
         this.gender = gender;
+        this.file = file;
+        this.attraction = attraction;
     }
 
     public RegisterRequest() {
+    }
+
+    public Attraction getAttraction() {
+        return attraction;
+    }
+
+    public void setAttraction(Attraction attraction) {
+        this.attraction = attraction;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 
     public String getUsername() {

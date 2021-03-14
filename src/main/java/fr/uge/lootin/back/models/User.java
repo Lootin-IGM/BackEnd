@@ -40,26 +40,33 @@ public class User implements UserDetails {
     private Login login;
 
     @Enumerated(EnumType.STRING)
-    @javax.validation.constraints.NotNull
+    @NotNull
     private Authority authority;
 
     @Enumerated(EnumType.STRING)
-    @javax.validation.constraints.NotNull
+    @NotNull
     private Gender gender;
 
     @NotNull
     private int age;
 
     @NotNull
+    @Lob
     private String description;
 
-    //TODO picture
+    @NotNull
+    @ManyToOne
+    @JoinTable(name = "User_Image", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "image_id")})
+    private Image image;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Attraction attraction;
 
     public User() {
     }
 
-    public User(String firstName, String lastName, Set<Game> games, Login login, Gender gender, int age, String description) {
+    public User(String firstName, String lastName, Set<Game> games, Login login, Gender gender, int age, String description, Image image, Attraction attraction) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.games = games;
@@ -67,6 +74,24 @@ public class User implements UserDetails {
         this.gender = gender;
         this.age = age;
         this.description = description;
+        this.image = image;
+        this.attraction = attraction;
+    }
+
+    public Attraction getAttraction() {
+        return attraction;
+    }
+
+    public void setAttraction(Attraction attraction) {
+        this.attraction = attraction;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public long getId() {

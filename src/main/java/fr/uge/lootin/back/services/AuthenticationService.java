@@ -5,9 +5,11 @@ import fr.uge.lootin.back.dto.LoginResponse;
 import fr.uge.lootin.back.dto.RegisterRequest;
 import fr.uge.lootin.back.dto.RegisterResponse;
 import fr.uge.lootin.back.models.Game;
+import fr.uge.lootin.back.models.Image;
 import fr.uge.lootin.back.models.Login;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.GameRepository;
+import fr.uge.lootin.back.repositories.ImageRepository;
 import fr.uge.lootin.back.repositories.UserRepository;
 import fr.uge.lootin.back.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,6 +44,9 @@ public class AuthenticationService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private ImageRepository imageRepository;
+
     public LoginResponse login(LoginRequest loginRequest) throws Exception{
         try{
             authenticationManager.authenticate(
@@ -55,13 +61,17 @@ public class AuthenticationService {
         return new LoginResponse(jtwToken);
     }
 
-    public RegisterResponse register(RegisterRequest registerRequest) {
+    public RegisterResponse register(RegisterRequest registerRequest) throws IOException {
         User user = new User();
         Login login = new Login();
+        Image image = new Image();
         System.out.println("username : " + registerRequest.getUsername() + " " + "password : " + registerRequest.getPassword() + " " + "firstname : " + registerRequest.getFirstName() + " " + "lastname : " + registerRequest.getLastName() + " " + "games : " + registerRequest.getGames());
         /*
         user.setUsername(registerRequest.getUsername());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));*/
+        image.setName(registerRequest.getUsername());
+        byte[] imageGetted = registerRequest.getFile().getBytes();
+        image.setImage(imageGetted);
         login.setUsername(registerRequest.getUsername());
         login.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setAuthority(User.Authority.USER);
@@ -70,6 +80,8 @@ public class AuthenticationService {
         user.setLastName(registerRequest.getLastName());
         user.setDescription(registerRequest.getDescription());
         user.setAge(registerRequest.getAge());
+        user.setImage(image);
+        user.setAttraction(registerRequest.getAttraction());
         if (registerRequest.getGender().equals("F")) {
             user.setGender(User.Gender.FEMALE);
         }else{
@@ -79,8 +91,9 @@ public class AuthenticationService {
 
         Set<Game> targetSet = new HashSet<>();
         //TODO a améliorer avec l'Optional
-        registerRequest.getGames().forEach(x -> targetSet.add(gameRepository.findByGameName(x).get()));
+        registerRequest.getGames().forEach(x -> {System.out.println("game=" + x); targetSet.add(gameRepository.findByGameName(x).get());});
         user.setGames(targetSet);
+        imageRepository.save(image);
         userRepository.save(user);
         return new RegisterResponse(registerRequest.getUsername());
     }

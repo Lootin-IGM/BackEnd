@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @Validated
@@ -28,7 +29,7 @@ public class AuthenticationController {
 
     @RequestMapping("/register")
     @PostMapping
-    public RegisterResponse registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public RegisterResponse registerUser(@Valid RegisterRequest registerRequest) throws IOException {
         return authenticationService.register(registerRequest);
     }
 
