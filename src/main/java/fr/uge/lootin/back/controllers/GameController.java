@@ -1,5 +1,6 @@
 package fr.uge.lootin.back.controllers;
 
+import fr.uge.lootin.back.dto.AllGamesDto;
 import fr.uge.lootin.back.dto.GameDto;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.services.GameService;
@@ -30,7 +31,7 @@ public class GameController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Game>> getAllGames() {
+    public ResponseEntity<AllGamesDto> getAllGames() {
         return ResponseEntity.ok(gameService.getAll());
     }
 }

@@ -1,5 +1,6 @@
 package fr.uge.lootin.back.services;
 
+import fr.uge.lootin.back.dto.AllGamesDto;
 import fr.uge.lootin.back.dto.GameDto;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.Image;
@@ -25,9 +26,10 @@ public class GameService {
         return gameRepository.save(saveGame);
     }
 
-    public List<Game> getAll() {
+    public AllGamesDto getAll() {
         List<Game> games = (List<Game>) gameRepository.findAll();
-        return games;
+        AllGamesDto res = new AllGamesDto(games);
+        return res;
     }
 
     public Optional<Game> getGame(String gameName) {
