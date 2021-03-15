@@ -11,14 +11,18 @@ public class UserResponse {
     private String login;
     private String image;
     private User.Gender gender;
+    private int age;
+    private String description;
 
-    public UserResponse(Long id, String firstName, String lastName, String login, String image, User.Gender gender) {
+    public UserResponse(Long id, String firstName, String lastName, String login, String image, User.Gender gender, int age, String description) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
         this.image = image;
         this.gender = gender;
+        this.age = age;
+        this.description = description;
     }
 
     public UserResponse(User user) {
@@ -28,6 +32,8 @@ public class UserResponse {
         this.login = user.getUsername();
         this.image = Base64.getEncoder().encodeToString(user.getImage().getImage());
         this.gender = user.getGender();
+        this.age = user.getAge();
+        this.description = user.getDescription();
     }
 
     public Long getId() {
@@ -76,5 +82,21 @@ public class UserResponse {
 
     public void setGender(User.Gender gender) {
         this.gender = gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
