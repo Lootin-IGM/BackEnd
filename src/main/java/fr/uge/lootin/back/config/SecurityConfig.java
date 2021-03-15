@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -41,8 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
+        http.csrf().disable().cors().disable().authorizeRequests()
 
+                .antMatchers("/ws/user").permitAll() //
+                .antMatchers(HttpMethod.POST, "/ws/user").permitAll() //
                 // No need authentication.
                 .antMatchers("/login").permitAll() //
                 .antMatchers(HttpMethod.POST, "/login").permitAll() //
