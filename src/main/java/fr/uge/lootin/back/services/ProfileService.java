@@ -3,21 +3,29 @@ package fr.uge.lootin.back.services;
 import fr.uge.lootin.back.dto.FullProfileResponse;
 import fr.uge.lootin.back.dto.LiteProfileResponse;
 import fr.uge.lootin.back.dto.UserResponse;
+import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.User;
+import fr.uge.lootin.back.repositories.GameRepository;
+import fr.uge.lootin.back.repositories.ImageRepository;
 import fr.uge.lootin.back.repositories.UserRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProfileService {
+    private String SUCCES_UPDATE = "informations updated successfully";
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private GameRepository gameRepository;
 
     public LiteProfileResponse getLiteProfile(User user) {
         user = userRepository.findById(user.getId()).get();
@@ -40,5 +48,29 @@ public class ProfileService {
     public FullProfileResponse getFullProfileById(Long id) {
         var user = userRepository.findById(id).get();
         return new FullProfileResponse(user);
+    }
+
+    public String modifyDescription(User user, String description) {
+        user = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
+        user.setDescription(description);
+        userRepository.save(user);
+        return SUCCES_UPDATE;
+    }
+
+    public String modifyImage(User user, byte[] image) {
+        User actual = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
+        var oldImage = imageRepository.findById(actual.getImage().getId()).orElseThrow(() -> new IllegalArgumentException("image " + actual.getImage().getId() + " not found"));
+        oldImage.setImage(image);
+        imageRepository.save(oldImage);
+        return SUCCES_UPDATE;
+    }
+
+    public String modifyGames(User user, List<String> games) {
+        User actual = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
+        Set<Game> newGames= new HashSet<>();
+        games.forEach(g -> newGames.add(gameRepository.findByGameName(g).orElseThrow(() -> new IllegalArgumentException("game " + g + " doesn't exist"))));
+        actual.setGames(newGames);
+        userRepository.save(actual);
+        return SUCCES_UPDATE;
     }
 }

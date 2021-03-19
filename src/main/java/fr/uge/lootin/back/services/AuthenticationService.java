@@ -91,7 +91,7 @@ public class AuthenticationService {
 
         Set<Game> targetSet = new HashSet<>();
         //TODO a améliorer avec l'Optional
-        registerRequest.getGames().forEach(x -> {System.out.println("game=" + x); targetSet.add(gameRepository.findByGameName(x).get());});
+        registerRequest.getGames().forEach(x -> {System.out.println("game=" + x); targetSet.add(gameRepository.findByGameName(x).orElseThrow(() -> new IllegalArgumentException("game " + x + " doesn't exist")));});
         user.setGames(targetSet);
         imageRepository.save(image);
         userRepository.save(user);
