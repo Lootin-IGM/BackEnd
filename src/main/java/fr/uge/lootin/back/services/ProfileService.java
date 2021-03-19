@@ -2,6 +2,7 @@ package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.FullProfileResponse;
 import fr.uge.lootin.back.dto.LiteProfileResponse;
+import fr.uge.lootin.back.dto.UpdateResponse;
 import fr.uge.lootin.back.dto.UserResponse;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.User;
@@ -50,27 +51,27 @@ public class ProfileService {
         return new FullProfileResponse(user);
     }
 
-    public String modifyDescription(User user, String description) {
+    public UpdateResponse modifyDescription(User user, String description) {
         user = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
         user.setDescription(description);
         userRepository.save(user);
-        return SUCCES_UPDATE;
+        return new UpdateResponse("description updated successfully");
     }
 
-    public String modifyImage(User user, byte[] image) {
+    public UpdateResponse modifyImage(User user, byte[] image) {
         User actual = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
         var oldImage = imageRepository.findById(actual.getImage().getId()).orElseThrow(() -> new IllegalArgumentException("image " + actual.getImage().getId() + " not found"));
         oldImage.setImage(image);
         imageRepository.save(oldImage);
-        return SUCCES_UPDATE;
+        return new UpdateResponse("description updated successfully");
     }
 
-    public String modifyGames(User user, List<String> games) {
+    public UpdateResponse modifyGames(User user, List<String> games) {
         User actual = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
         Set<Game> newGames= new HashSet<>();
         games.forEach(g -> newGames.add(gameRepository.findByGameName(g).orElseThrow(() -> new IllegalArgumentException("game " + g + " doesn't exist"))));
         actual.setGames(newGames);
         userRepository.save(actual);
-        return SUCCES_UPDATE;
+        return new UpdateResponse("description updated successfully");
     }
 }

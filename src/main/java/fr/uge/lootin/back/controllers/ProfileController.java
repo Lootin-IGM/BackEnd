@@ -1,9 +1,6 @@
 package fr.uge.lootin.back.controllers;
 
-import fr.uge.lootin.back.dto.FullProfileResponse;
-import fr.uge.lootin.back.dto.LiteProfileResponse;
-import fr.uge.lootin.back.dto.UpdateDescription;
-import fr.uge.lootin.back.dto.UpdateGames;
+import fr.uge.lootin.back.dto.*;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.services.ImageService;
 import fr.uge.lootin.back.services.ProfileService;
@@ -38,14 +35,14 @@ public class ProfileController {
     }
 
     @PostMapping("/description")
-    public ResponseEntity<String> modifyDescription(@RequestBody UpdateDescription description) {
+    public ResponseEntity<UpdateResponse> modifyDescription(@RequestBody UpdateDescription description) {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var res = profileService.modifyDescription(user, description.getDescription());
         return ResponseEntity.ok(res);
     }
 
     @PostMapping("/image")
-    public ResponseEntity<String> modifyDescription(@RequestParam("image") MultipartFile file) throws IOException {
+    public ResponseEntity<UpdateResponse> modifyDescription(@RequestParam("image") MultipartFile file) throws IOException {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         byte[] image = file.getBytes();
         var res = profileService.modifyImage(user, image);
@@ -53,7 +50,7 @@ public class ProfileController {
     }
 
     @PostMapping("/games")
-    public ResponseEntity<String> modifyDescription(@RequestBody UpdateGames games) {
+    public ResponseEntity<UpdateResponse> modifyDescription(@RequestBody UpdateGames games) {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var res = profileService.modifyGames(user, games.getGames());
         return ResponseEntity.ok(res);
