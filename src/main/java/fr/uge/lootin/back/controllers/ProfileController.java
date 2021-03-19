@@ -42,7 +42,7 @@ public class ProfileController {
     }
 
     @PostMapping("/image")
-    public ResponseEntity<UpdateResponse> modifyDescription(@RequestParam("image") MultipartFile file) throws IOException {
+    public ResponseEntity<UpdateResponse> modifyImage(@RequestParam("image") MultipartFile file) throws IOException {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         byte[] image = file.getBytes();
         var res = profileService.modifyImage(user, image);
@@ -50,7 +50,7 @@ public class ProfileController {
     }
 
     @PostMapping("/games")
-    public ResponseEntity<UpdateResponse> modifyDescription(@RequestBody UpdateGames games) {
+    public ResponseEntity<UpdateResponse> modifyGames(@RequestBody UpdateGames games) {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var res = profileService.modifyGames(user, games.getGames());
         return ResponseEntity.ok(res);
