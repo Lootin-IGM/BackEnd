@@ -63,7 +63,7 @@ public class ProfileService {
         var oldImage = imageRepository.findById(actual.getImage().getId()).orElseThrow(() -> new IllegalArgumentException("image " + actual.getImage().getId() + " not found"));
         oldImage.setImage(image);
         imageRepository.save(oldImage);
-        return new UpdateResponse("description updated successfully");
+        return new UpdateResponse("image updated successfully");
     }
 
     public UpdateResponse modifyGames(User user, List<String> games) {
@@ -72,6 +72,6 @@ public class ProfileService {
         games.forEach(g -> newGames.add(gameRepository.findByGameName(g).orElseThrow(() -> new IllegalArgumentException("game " + g + " doesn't exist"))));
         actual.setGames(newGames);
         userRepository.save(actual);
-        return new UpdateResponse("description updated successfully");
+        return new UpdateResponse("games updated successfully");
     }
 }
