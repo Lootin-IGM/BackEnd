@@ -9,6 +9,7 @@ import fr.uge.lootin.back.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -41,8 +42,9 @@ public class GameService {
         return gameRepository.findByGameName(gameName);
     }
 
-    public Set<Game> getGamesForUser(User user) {
+    public AllGamesDto getGamesForUser(User user) {
         User actual = userService.getById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user " + user.getUsername() + " doesn't exist"));
-        return actual.getGames();
+        AllGamesDto res = new AllGamesDto(new ArrayList<>(actual.getGames()));
+        return res;
     }
 }

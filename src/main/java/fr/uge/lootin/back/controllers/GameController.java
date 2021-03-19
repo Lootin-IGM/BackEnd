@@ -39,7 +39,7 @@ public class GameController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<Set<Game>> getGamesForUser() {
+    public ResponseEntity<AllGamesDto> getGamesForUser() {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(gameService.getGamesForUser(user));
     }
