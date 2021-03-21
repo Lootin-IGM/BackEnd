@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -42,6 +43,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+
+        http.csrf().disable().cors().disable().authorizeRequests()
+
+                .antMatchers("/bonjour").permitAll()
+                .antMatchers("/secured/*").permitAll()
+                .antMatchers("/secured/**").permitAll()
+
+
+                // No need authentication.
+
+
+                // Set the session security
+                .and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+
         http.csrf().disable().cors().disable().authorizeRequests()
 
                 .antMatchers("/ws/user").permitAll() //
@@ -57,20 +75,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // No need authentication.
                 .antMatchers(HttpMethod.GET, "/games/").permitAll() //
 
+                //.antMatchers("/bonjour").permitAll()
+
+
                 // Need authentication.
                 .anyRequest().authenticated()
+
+
 
                 // Set the session security
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+
+
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-               }
+
+
+    }
 
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+
     }
 
 
@@ -78,4 +106,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
