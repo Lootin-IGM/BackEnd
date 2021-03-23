@@ -12,17 +12,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/user/queue/specific-user");
+        config.enableSimpleBroker("/topic", "/user");
         config.setApplicationDestinationPrefixes("/spring-security-mvc-socket");
-        config.setUserDestinationPrefix("/user");
     }
 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Ici que le client se connecte en premier lieu pour le handshake
-        registry.addEndpoint("/secured/room").setAllowedOrigins("http://localhost:8080").withSockJS();
-        //registry.addEndpoint("/secured/room").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint("/secured/room").setAllowedOrigins("http://localhost:8080");
     }
 
 }
