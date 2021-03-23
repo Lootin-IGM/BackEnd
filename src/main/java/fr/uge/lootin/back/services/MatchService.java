@@ -107,7 +107,6 @@ public class MatchService {
         return formatRes;
     }
 
-
     public List<MatchResponse> getMatchesLastMsgPage(User user, MatchRequest matchRequest){
         var page = PageRequest.of(matchRequest.getPage(), matchRequest.getNbMatches(), Sort.by("msg.sendTime").descending());
 

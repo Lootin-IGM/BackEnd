@@ -51,17 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/secured/*").permitAll()
                 .antMatchers("/secured/**").permitAll()
 
-
-                // No need authentication.
-
-
-                // Set the session security
-                .and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-
-        http.csrf().disable().cors().disable().authorizeRequests()
-
                 .antMatchers("/ws/user").permitAll() //
                 .antMatchers(HttpMethod.POST, "/ws/user").permitAll() //
                 // No need authentication.
