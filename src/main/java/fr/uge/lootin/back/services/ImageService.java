@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.models.Image;
+import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,9 @@ public class ImageService {
 
     public Optional<Image> getImage(Long imageId) {
         return imageRepository.findById(imageId);
+    }
+
+    public Optional<Image> getMyImage(User actual) {
+        return imageRepository.findById(actual.getImage().getId());
     }
 }
