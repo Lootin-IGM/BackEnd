@@ -33,7 +33,7 @@ public class GreetingController {
         System.out.println("Current user : " + currentPrincipalName);
         System.out.println("Connected users : " + simpUserRegistry.getUsers());
         LocalDateTime now = LocalDateTime.now();
-        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/user/queue/specific-user", new MessageReceived(message.getId_author(), message.getContent(), now));
+        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/reply", new MessageReceived(message.getId_author(), message.getContent(), now));
     }
 
     @MessageMapping("/bonjour")
@@ -44,7 +44,7 @@ public class GreetingController {
         System.out.println("Current user : " + currentPrincipalName);
         System.out.println("Connected users : " + simpUserRegistry.getUsers());
         LocalDateTime now = LocalDateTime.now();
-        simpMessagingTemplate.convertAndSendToUser(message.getSendTo().toString(), "/user/queue/specific-user", new MessageReceived(message.getId_author(), message.getContent(), now));
+        simpMessagingTemplate.convertAndSendToUser(message.getSendTo().toString(), "/reply", new MessageReceived(message.getId_author(), message.getContent(), now));
     }
 
 }
