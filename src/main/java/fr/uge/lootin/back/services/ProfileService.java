@@ -1,9 +1,6 @@
 package fr.uge.lootin.back.services;
 
-import fr.uge.lootin.back.dto.FullProfileResponse;
-import fr.uge.lootin.back.dto.LiteProfileResponse;
-import fr.uge.lootin.back.dto.UpdateResponse;
-import fr.uge.lootin.back.dto.UserResponse;
+import fr.uge.lootin.back.dto.*;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.GameRepository;
@@ -73,5 +70,9 @@ public class ProfileService {
         actual.setGames(newGames);
         userRepository.save(actual);
         return new UpdateResponse("games updated successfully");
+    }
+
+    public DescriptionDto getMyDescritpion(User user) {
+        return new DescriptionDto(user.getDescription());
     }
 }
