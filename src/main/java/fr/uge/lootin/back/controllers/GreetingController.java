@@ -46,8 +46,12 @@ public class GreetingController {
         System.out.println("Current user : " + currentPrincipalName);
         System.out.println("Connected users : " + simpUserRegistry.getUsers());
         System.out.println("send -> : " +message.getText());
+        System.out.println("sender -> : " +message.getSender());
 
-        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/text", new NewMessageResponse(0L, 1L, new Timestamp(System.currentTimeMillis()).toString(), message.getText()));
+
+        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/text", new NewMessageResponse(0L, message.getSender(), new Timestamp(System.currentTimeMillis()).toString(), message.getText()));
+        simpMessagingTemplate.convertAndSendToUser(message.getSendTo().toString(), "/text", new NewMessageResponse(0L, message.getSender(), new Timestamp(System.currentTimeMillis()).toString(), message.getText()));
+
     }
 
     @MessageMapping("/picture")
@@ -59,6 +63,9 @@ public class GreetingController {
         System.out.println("Connected users : " + simpUserRegistry.getUsers());
         System.out.println("IMAGE -> " + message.getPicture());
 
-        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/picture", new NewMessagePictureResponse(0L, 1L, new Timestamp(System.currentTimeMillis()).toString(), message.getPicture()));
+        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/picture", new NewMessagePictureResponse(0L, message.getSender(), new Timestamp(System.currentTimeMillis()).toString(), message.getPicture()));
+        simpMessagingTemplate.convertAndSendToUser(message.getSendTo().toString(), "/picture", new NewMessagePictureResponse(0L, message.getSender(), new Timestamp(System.currentTimeMillis()).toString(), message.getPicture()));
+
     }
 }
+
