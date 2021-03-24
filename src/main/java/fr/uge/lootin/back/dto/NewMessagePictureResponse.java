@@ -2,30 +2,23 @@ package fr.uge.lootin.back.dto;
 
 import fr.uge.lootin.back.models.Message;
 import fr.uge.lootin.back.models.User;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Timestamp;
-
-public class NewMessageResponse {
+public class NewMessagePictureResponse {
     private Long id;
     private Long sender;
 
     private String sendTime;
 
-    private String message;
+    private String picture;
 
-    public NewMessageResponse(Long id, Long sender , String sendTime, String message) {
+    public NewMessagePictureResponse(Long id, Long sender , String sendTime, String picture) {
         this.id = id;
         this.sender = sender;
         this.sendTime = sendTime;
-        this.message = message;
+        this.picture = picture;
     }
 
-    public NewMessageResponse(Message message, User user) {
-        this.id = message.getMatch().getId();
-        this.sender = user.getId();
-        this.sendTime = message.getSendTime().toString();
-        this.message = message.getMessage();
-    }
 
     public Long getId() {
         return id;
@@ -51,11 +44,11 @@ public class NewMessageResponse {
         this.sendTime = sendTime;
     }
 
-    public String getMessage() {
-        return message;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }
