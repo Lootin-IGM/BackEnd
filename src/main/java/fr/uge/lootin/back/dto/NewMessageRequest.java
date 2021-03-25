@@ -3,7 +3,6 @@ package fr.uge.lootin.back.dto;
 public class NewMessageRequest {
     private String text;
     private Long matchId;
-    private Long sendTo;
     private Long sender;
 
     public NewMessageRequest(String text, Long matchId, Long sender) {
