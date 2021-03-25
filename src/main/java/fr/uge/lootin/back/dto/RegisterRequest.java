@@ -17,8 +17,9 @@ public class RegisterRequest {
     private int age;
     private String gender;
     private Attraction attraction;
+    private String email;
 
-    public RegisterRequest(String username, String password, String firstName, String lastName, List<String> games, String description, int age, String gender, MultipartFile file, Attraction attraction) {
+    public RegisterRequest(String username, String password, String firstName, String lastName, List<String> games, String description, int age, String gender, MultipartFile file, Attraction attraction, String email) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -29,9 +30,18 @@ public class RegisterRequest {
         this.gender = gender;
         this.file = file;
         this.attraction = attraction;
+        this.email = email;
     }
 
     public RegisterRequest() {
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Attraction getAttraction() {
