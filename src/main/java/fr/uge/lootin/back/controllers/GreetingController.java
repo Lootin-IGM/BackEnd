@@ -56,6 +56,8 @@ public class GreetingController {
         LocalDateTime ldt = ts.toLocalDateTime();
         String time = ldt.getDayOfWeek() + ", " + ts.getHours() + ":" + ts.getMinutes();
 
+        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/notification", new Notification("message", message.getSender().toString()));
+
         simpMessagingTemplate.convertAndSendToUser(message.getMatchId().toString(), "/text", new NewMessageResponse(0L, message.getSender(), time, message.getText()));
 
     }
@@ -73,6 +75,7 @@ public class GreetingController {
         Timestamp ts= new Timestamp(System.currentTimeMillis());
         LocalDateTime ldt = ts.toLocalDateTime();
         String time = ldt.getDayOfWeek() + ", " + ts.getHours() + ":" + ts.getMinutes();
+        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/notification", new Notification("message", message.getSender().toString()));
 
         simpMessagingTemplate.convertAndSendToUser(message.getMatchId().toString(), "/picture", new NewMessagePictureResponse(0L, message.getSender(), time, message.getPicture()));
 
