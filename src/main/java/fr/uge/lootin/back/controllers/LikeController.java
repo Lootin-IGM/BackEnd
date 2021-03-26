@@ -40,11 +40,11 @@ public class LikeController {
         var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var res = likeService.addLike(user, likeRequest.getUserLikedId());
         if (res.isNewMatch()) {
-            System.out.println("match detected");
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String currentPrincipalName = authentication.getName();
-            simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/notification", new Notification("match", likeRequest.getUserLikedId().toString()));
-            simpMessagingTemplate.convertAndSendToUser(likeRequest.getUserLikedId().toString(), "/notification", new Notification("match", currentPrincipalName));
+            System.out.println("loot detected between :" + Long.valueOf(user.getId()).toString() + " and " + likeRequest.getUserLikedId().toString());
+
+            simpMessagingTemplate.convertAndSendToUser(Long.valueOf(user.getId()).toString(), "/notification", new Notification("loot", likeRequest.getUserLikedId().toString()));
+            simpMessagingTemplate.convertAndSendToUser(likeRequest.getUserLikedId().toString(), "/notification", new Notification("loot", "0"));
         }
         return ResponseEntity.ok(res);
     }

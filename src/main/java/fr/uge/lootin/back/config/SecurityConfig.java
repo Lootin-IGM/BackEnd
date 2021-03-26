@@ -52,6 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/secured/*").permitAll()
                 .antMatchers("/secured/**").permitAll()
 
+                .antMatchers(HttpMethod.GET, "/matches/test").permitAll() //
+
+
                 .antMatchers("/ws/user").permitAll() //
                 .antMatchers(HttpMethod.POST, "/ws/user").permitAll() //
                 // No need authentication.
