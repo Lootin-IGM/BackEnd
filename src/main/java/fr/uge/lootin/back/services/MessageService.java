@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -28,39 +29,34 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-
     public Message newMessage(String content, Match match, User user, TypeMessage typeMessage){
         return save(new Message(match, content, user, typeMessage));
     }
+    public List<MessageResponse> findByMatchId(Long matchId, int pages, int sizePage){
+        var page = PageRequest.of(pages, sizePage, Sort.by("sendTime").descending());
+        System.out.println("avant requete pour les avoir");
 
-    public List<MessageResponse> findByMatchId(MessageRequest messageRequest, User user){
-        verifyMatch(messageRequest.getMatchId(), user);
-        var page = PageRequest.of(messageRequest.getPage(), messageRequest.getNb(), Sort.by("sendTime").descending());
+        var res = messageRepository.findByMatchId(matchId, page);
+        System.out.println("après la requete les rhey");
+        System.out.println(res.toString());
 
-        var res = messageRepository.findByMatchId(messageRequest.getMatchId(), page);
-        var formatRes = new ArrayList<MessageResponse>();
-        for (Message m  : res){
-            formatRes.add(MessageMapper.INSTANCE.toMessageResponse(m));
-        }
-        return formatRes;
+        /*
+        List<MessageResponse> resultat = new ArrayList<MessageResponse>();
+
+        res.forEach(m -> resultat.add(MessageMapper.INSTANCE.toMessageResponse(m)));
+
+        return resultat;
+
+         */
+        return res.stream().map(MessageMapper.INSTANCE::toMessageResponse).collect(Collectors.toList());
+        //return res.stream().map(MessageResponse::createFromMessage).collect(Collectors.toList());
     }
 
-    private Match verifyMatch(Long matchId, User user) {
-        var oMatch = matchRepository.findById(matchId);
 
-        if (oMatch.isEmpty()){
-            throw new IllegalArgumentException();
-        }
-        var match = oMatch.get();
-        if (!(match.getUser1().getId() == user.getId() || match.getUser2().getId() == user.getId())){
-            throw new IllegalArgumentException();
-        }
-        return match;
-    }
 
 
     public MessageResponse getById(Long id) {
-        var msg = messageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        var msg = messageRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return MessageMapper.INSTANCE.toMessageResponse(msg);
     }
 }

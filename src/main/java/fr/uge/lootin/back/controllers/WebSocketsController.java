@@ -65,7 +65,7 @@ public class WebSocketsController {
         if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
 
         // check id
-        var user = userService.getById(userId).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
+        var user = userService.getById(messageRequest.getSender()).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
 
         // check user is in match
         var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
@@ -95,7 +95,15 @@ public class WebSocketsController {
         var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
 
 
-        Message message = messageService.newMessage(messageRequest.getPicture(), match, user, TypeMessage.AUDIO);
+        System.out.println("CREATION MESSAGE");
+        Message m = new Message(match,  messageRequest.getPicture() , user, TypeMessage.AUDIO);
+
+
+        System.out.println("AVANT INSeRT");
+
+        Message message = messageService.save(m);
+        ///System.out.println("APRES INSeRT");
+
         simpMessagingTemplate.convertAndSendToUser(
                 messageRequest.getMatchId().toString(),
                 "/picture",

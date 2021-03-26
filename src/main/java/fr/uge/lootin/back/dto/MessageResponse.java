@@ -24,6 +24,12 @@ public class MessageResponse {
     }
 
 
+    public static MessageResponse createFromMessage(Message message){
+        return new MessageResponse(message.getId(), message.getSendTime(), message.getMessage(), message.getUser().getId(),message.getTypeMessage());
+    }
+
+
+
     public Long getId() {
         return id;
     }

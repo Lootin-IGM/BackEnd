@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.models;
 
 
+import com.sun.istack.NotNull;
 import fr.uge.lootin.back.utils.TypeMessage;
 import org.hibernate.annotations.Type;
 
@@ -22,13 +23,17 @@ public class Message {
     @Type(type="timestamp")
     private Timestamp sendTime;
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name ="message")
+    @NotNull
     private String message;
 
     @ManyToOne
     @JoinColumn(name = "senderId")
     private User user;
 
+    @Column(name="type_message")
     private TypeMessage typeMessage;
 
 

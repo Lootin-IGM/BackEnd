@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.models;
 
 import com.sun.istack.NotNull;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity(name = "User")
+@Entity(name = "user_table")
 public class User implements UserDetails {
     public enum Authority {
         USER
@@ -55,6 +56,7 @@ public class User implements UserDetails {
 
     @NotNull
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String description;
 
     @NotNull
