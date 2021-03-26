@@ -12,8 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 public class GreetingController {
@@ -33,9 +35,11 @@ public class GreetingController {
         String currentPrincipalName = authentication.getName();
         System.out.println("Current user : " + currentPrincipalName);
         System.out.println("Connected users : " + simpUserRegistry.getUsers());
-        LocalDateTime now = LocalDateTime.now();
+        Timestamp ts= new Timestamp(System.currentTimeMillis());
+        String time = ts.getDay() + " " + ts.getHours() + ":" + ts.getMinutes();
 
-        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/text", new NewMessageResponse(0L, 1L, new Timestamp(System.currentTimeMillis()).toString(), message.getText()));
+
+        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/text", new NewMessageResponse(0L, 1L, time, message.getText()));
     }
 
     @MessageMapping("/bonjour")
@@ -48,9 +52,13 @@ public class GreetingController {
         System.out.println("send -> : " +message.getText());
         System.out.println("sender -> : " +message.getSender());
 
+        Timestamp ts= new Timestamp(System.currentTimeMillis());
+        LocalDateTime ldt = ts.toLocalDateTime();
+        String time = ldt.getDayOfWeek() + ", " + ts.getHours() + ":" + ts.getMinutes();
 
-        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/text", new NewMessageResponse(0L, message.getSender(), new Timestamp(System.currentTimeMillis()).toString(), message.getText()));
-        simpMessagingTemplate.convertAndSendToUser(message.getSendTo().toString(), "/text", new NewMessageResponse(0L, message.getSender(), new Timestamp(System.currentTimeMillis()).toString(), message.getText()));
+        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/notification", new Notification("message", message.getSender().toString()));
+
+        simpMessagingTemplate.convertAndSendToUser(message.getMatchId().toString(), "/text", new NewMessageResponse(0L, message.getSender(), time, message.getText()));
 
     }
 
@@ -61,10 +69,15 @@ public class GreetingController {
         String currentPrincipalName = authentication.getName();
         System.out.println("Current user : " + currentPrincipalName);
         System.out.println("Connected users : " + simpUserRegistry.getUsers());
-        System.out.println("IMAGE -> " + message.getPicture());
+        //System.out.println("IMAGE -> " + message.getPicture());
+        System.out.println("MATCH ID -> : " + message.getMatchId());
 
-        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/picture", new NewMessagePictureResponse(0L, message.getSender(), new Timestamp(System.currentTimeMillis()).toString(), message.getPicture()));
-        simpMessagingTemplate.convertAndSendToUser(message.getSendTo().toString(), "/picture", new NewMessagePictureResponse(0L, message.getSender(), new Timestamp(System.currentTimeMillis()).toString(), message.getPicture()));
+        Timestamp ts= new Timestamp(System.currentTimeMillis());
+        LocalDateTime ldt = ts.toLocalDateTime();
+        String time = ldt.getDayOfWeek() + ", " + ts.getHours() + ":" + ts.getMinutes();
+        simpMessagingTemplate.convertAndSendToUser(currentPrincipalName, "/notification", new Notification("message", message.getSender().toString()));
+
+        simpMessagingTemplate.convertAndSendToUser(message.getMatchId().toString(), "/picture", new NewMessagePictureResponse(0L, message.getSender(), time, message.getPicture()));
 
     }
 }
