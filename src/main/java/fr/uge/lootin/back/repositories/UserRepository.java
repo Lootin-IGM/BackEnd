@@ -1,5 +1,6 @@
 package fr.uge.lootin.back.repositories;
 
+import fr.uge.lootin.back.models.Attraction;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.User;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     //possible opti get only userId
     List<User> findDistinctByGamesIn(Set<Game> games);
+
+    List<User> findDistinctByGamesInAndGender(Set<Game> games, User.Gender gender);
 }

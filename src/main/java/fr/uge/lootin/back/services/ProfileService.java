@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.*;
+import fr.uge.lootin.back.models.Attraction;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.GameRepository;
@@ -26,14 +27,24 @@ public class ProfileService {
     private GameRepository gameRepository;
 
     public LiteProfileResponse getLiteProfile(User user) {
-        user = userRepository.findById(user.getId()).get();
-        var tmp = userRepository.findDistinctByGamesIn(user.getGames());
+        var userId = user.getId();
+        user = userRepository.findById(userId).get();
+        List<User> tmp;
+
+        switch (user.getAttraction()){
+            case MEN : tmp = userRepository.findDistinctByGamesInAndGender(user.getGames(), User.Gender.MALE); break;
+            case WOMEN : tmp = userRepository.findDistinctByGamesInAndGender(user.getGames(), User.Gender.FEMALE); break;
+            case BOTH : tmp = userRepository.findDistinctByGamesIn(user.getGames()); break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + user.getAttraction());
+        }
+
         var res = new LiteProfileResponse();
         List<UserResponse> users = new ArrayList<>();
         Collections.shuffle(tmp);
         var cpt = 0;
         for (var u : tmp) {
-            if (u.getId() != user.getId()) {
+            if (u.getId() != userId) {
                 users.add( new UserResponse(u));
                 ++cpt;
             }
