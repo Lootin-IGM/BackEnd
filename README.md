@@ -1,3 +1,28 @@
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Developed with</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#requirements">Requirements</a></li>
+        <li><a href="#clone-the-repository">Clone the Repository</a></li>
+        <li><a href="#create-mysql-database">Create MySQL Database</a></li>
+        <li><a href="#running-app">Running the application locally</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#developers">Developers</a>
+    </li>
+  </ol>
+</details>
+
+
 # Lootin - BackEnd Application
 
 ## About The Project
