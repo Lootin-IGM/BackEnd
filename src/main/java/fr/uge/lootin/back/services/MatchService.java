@@ -31,6 +31,8 @@ public class MatchService {
     @Autowired
     private UserRepository userRepository;
 
+    public Optional<Match> findById(Long id){return matchRepository.findById(id);}
+
     public Match save(Match match) {
         return matchRepository.save(match);
     }

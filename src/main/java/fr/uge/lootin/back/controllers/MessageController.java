@@ -22,20 +22,24 @@ public class MessageController {
     private MessageService messageService;
 
     /**
-     *
+     * Supprimer ceci :)
      * @param newMessageRequest contains
      * @return
      */
+    /*
     @PostMapping
     public ResponseEntity<NewMessageResponse> newMessage(@Valid @RequestBody NewMessageRequest newMessageRequest){
+
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try{
-            var res = messageService.newMessage(newMessageRequest, user);
+
+            NewMessageResponse res = null ; //messageService.newMessage(newMessageRequest, user);
             return ResponseEntity.ok(res);
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().build();
         }
     }
+    */
 
     /**
      *
