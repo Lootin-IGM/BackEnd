@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.models;
 
 
+import fr.uge.lootin.back.utils.TypeMessage;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -28,22 +29,20 @@ public class Message {
     @JoinColumn(name = "senderId")
     private User user;
 
+    private TypeMessage typeMessage;
 
-    public Message(Match match, Timestamp sendTime, String message, User user) {
+
+    public Message(Match match, Timestamp sendTime, String message, User user, TypeMessage typeMessage) {
         this.match = match;
         this.sendTime = sendTime;
         this.message = message;
         this.user = user;
+        this.typeMessage = typeMessage;
     }
 
-    public Message(Match match, Timestamp sendTime, String message) {
-        this.match = match;
-        this.sendTime = sendTime;
-        this.message = message;
-    }
 
-    public Message(Match match, String message, User user) {
-        this(match, new Timestamp(System.currentTimeMillis()), message, user);
+    public Message(Match match, String message, User user, TypeMessage typeMessage) {
+        this(match, new Timestamp(System.currentTimeMillis()), message, user, typeMessage);
     }
 
     public Message() {
@@ -87,6 +86,14 @@ public class Message {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public TypeMessage getTypeMessage() {
+        return typeMessage;
+    }
+
+    public void setTypeMessage(TypeMessage typeMessage) {
+        this.typeMessage = typeMessage;
     }
 
     @Override
