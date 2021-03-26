@@ -2,8 +2,6 @@ package fr.uge.lootin.back.controllers;
 
 import fr.uge.lootin.back.dto.LikeRequest;
 import fr.uge.lootin.back.dto.LikeResponse;
-import fr.uge.lootin.back.dto.MessageRequest;
-import fr.uge.lootin.back.dto.MessageResponse;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.services.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @Validated

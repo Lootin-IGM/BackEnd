@@ -9,10 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.validation.Valid;
-import java.util.List;
-
 @RestController
 @Validated
 @RequestMapping("/messages")
@@ -20,26 +16,6 @@ public class MessageController {
 
     @Autowired
     private MessageService messageService;
-
-    /**
-     * Supprimer ceci :)
-     * @param newMessageRequest contains
-     * @return
-     */
-    /*
-    @PostMapping
-    public ResponseEntity<NewMessageResponse> newMessage(@Valid @RequestBody NewMessageRequest newMessageRequest){
-
-        var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        try{
-
-            NewMessageResponse res = null ; //messageService.newMessage(newMessageRequest, user);
-            return ResponseEntity.ok(res);
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    */
 
     /**
      *
@@ -54,7 +30,7 @@ public class MessageController {
         try {
             var res = messageService.findByMatchId(new MessageRequest(nb, page, matchId), user);
             return ResponseEntity.ok(new ListMessageResponse(res));
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().build();
         }
     }
