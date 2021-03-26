@@ -6,6 +6,7 @@ import fr.uge.lootin.back.models.Message;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.MatchRepository;
 import fr.uge.lootin.back.repositories.MessageRepository;
+import fr.uge.lootin.back.utils.TypeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageService {
@@ -26,15 +28,25 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public NewMessageResponse newMessage(NewMessageRequest newMessageRequest, User user){
+    /**
+     * TODO supprimer ça
+     * @param newMessageRequest
+     * @param user
+     * @return
+     */
+    public NewMessageResponse newMessageOLD(NewMessageRequest newMessageRequest, User user){
         var match = verifyMatch(newMessageRequest.getMatchId(), user);
-        var msg = save(new Message(match, newMessageRequest.getText(), user));
+        var msg = save(new Message(match, newMessageRequest.getText(), user, TypeMessage.TEXT));
         MatchResponse mr;
         if (match.getUser1().getId() == user.getId()){
             return new NewMessageResponse(msg, match.getUser2());
         }else{
             return new NewMessageResponse(msg, match.getUser1());
         }
+    }
+
+    public Message newMessage(String content, Match match, User user, TypeMessage typeMessage){
+        return save(new Message(match, content, user, typeMessage));
     }
 
     public List<MessageResponse> findByMatchId(MessageRequest messageRequest, User user){
@@ -61,6 +73,7 @@ public class MessageService {
         }
         return match;
     }
+
 
     public MessageResponse getById(Long id) {
         var msg = messageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
