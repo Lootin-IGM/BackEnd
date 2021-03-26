@@ -82,6 +82,10 @@ public class AuthenticationService {
         user.setAge(registerRequest.getAge());
         user.setImage(image);
         user.setAttraction(registerRequest.getAttraction());
+        if(!registerRequest.getEmail().contains("@")) {
+            throw new IllegalArgumentException("invalid email address");
+        }
+        user.setEmail(registerRequest.getEmail());
         if (registerRequest.getGender().equals("F")) {
             user.setGender(User.Gender.FEMALE);
         }else{

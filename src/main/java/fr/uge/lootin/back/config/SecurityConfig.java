@@ -67,6 +67,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // No need authentication.
                 .antMatchers(HttpMethod.GET, "/games/").permitAll() //
+                .antMatchers(HttpMethod.POST, "/games/").permitAll() //
+
+                // No need authentication.
+                .antMatchers(HttpMethod.POST, "/images/upload").permitAll() //
 
                 //.antMatchers("/bonjour").permitAll()
 

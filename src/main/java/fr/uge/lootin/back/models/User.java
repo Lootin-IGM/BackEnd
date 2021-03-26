@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @NotNull
     private String lastName;
 
+    @NotNull
+    private String email;
+
     @ManyToMany
     @JoinTable(name = "User_Game", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "game_id") })
     private Set<Game> games;
@@ -66,7 +69,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String firstName, String lastName, Set<Game> games, Login login, Gender gender, int age, String description, Image image, Attraction attraction) {
+    public User(String firstName, String lastName, Set<Game> games, Login login, Gender gender, int age, String description, Image image, Attraction attraction, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.games = games;
@@ -76,6 +79,15 @@ public class User implements UserDetails {
         this.description = description;
         this.image = image;
         this.attraction = attraction;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Attraction getAttraction() {
@@ -177,12 +189,15 @@ public class User implements UserDetails {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
                 ", games=" + games +
                 ", login=" + login +
                 ", authority=" + authority +
                 ", gender=" + gender +
                 ", age=" + age +
                 ", description='" + description + '\'' +
+                ", image=" + image +
+                ", attraction=" + attraction +
                 '}';
     }
 

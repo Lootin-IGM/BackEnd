@@ -55,4 +55,10 @@ public class ProfileController {
         var res = profileService.modifyGames(user, games.getGames());
         return ResponseEntity.ok(res);
     }
+
+    @GetMapping("/myDescription")
+    public ResponseEntity<DescriptionDto> getMyDescritpion() {
+        var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(profileService.getMyDescritpion(user));
+    }
 }
