@@ -4,6 +4,7 @@ import fr.uge.lootin.back.dto.LoginRequest;
 import fr.uge.lootin.back.dto.LoginResponse;
 import fr.uge.lootin.back.dto.RegisterRequest;
 import fr.uge.lootin.back.dto.RegisterResponse;
+import fr.uge.lootin.back.exception.Exceptions;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.Image;
 import fr.uge.lootin.back.models.Login;
@@ -53,7 +54,7 @@ public class AuthenticationService {
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
         } catch (BadCredentialsException e){
-            throw new Exception("Incorrect username or password", e);
+            throw Exceptions.INVALID_CREDENTIALS;
         }
         System.out.println("received Username : " + loginRequest.getUsername() + " password : " + loginRequest.getPassword());
         User user = userService.loadUserByUsername(loginRequest.getUsername());
@@ -83,7 +84,7 @@ public class AuthenticationService {
         user.setImage(image);
         user.setAttraction(registerRequest.getAttraction());
         if(!registerRequest.getEmail().contains("@")) {
-            throw new IllegalArgumentException("invalid email address");
+            throw Exceptions.INVALID_EMAIL_ADDRESS;
         }
         user.setEmail(registerRequest.getEmail());
         if (registerRequest.getGender().equals("F")) {

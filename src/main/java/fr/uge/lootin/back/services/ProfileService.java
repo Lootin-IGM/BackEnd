@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.*;
+import fr.uge.lootin.back.exception.Exceptions;
 import fr.uge.lootin.back.models.Attraction;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.User;
@@ -28,7 +29,7 @@ public class ProfileService {
 
     public LiteProfileResponse getLiteProfile(User user) {
         var userId = user.getId();
-        user = userRepository.findById(userId).get();
+        user = userRepository.findById(userId).orElseThrow(() -> Exceptions.userNotFound(userId));
         List<User> tmp;
 
         switch (user.getAttraction()){
@@ -36,7 +37,7 @@ public class ProfileService {
             case WOMEN : tmp = userRepository.findDistinctByGamesInAndGender(user.getGames(), User.Gender.FEMALE); break;
             case BOTH : tmp = userRepository.findDistinctByGamesIn(user.getGames()); break;
             default:
-                throw new IllegalStateException("Unexpected value: " + user.getAttraction());
+                throw Exceptions.attractionNotFound(user.getAttraction().toString());
         }
 
         var res = new LiteProfileResponse();
@@ -55,29 +56,32 @@ public class ProfileService {
     }
 
     public FullProfileResponse getFullProfileById(Long id) {
-        var user = userRepository.findById(id).get();
+        var user = userRepository.findById(id).orElseThrow(() -> Exceptions.userNotFound(id));
         return new FullProfileResponse(user);
     }
 
     public UpdateResponse modifyDescription(User user, String description) {
-        user = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
+        var username = user.getUsername();
+        user = userRepository.findById(user.getId()).orElseThrow(() -> Exceptions.userNotFound(username));
         user.setDescription(description);
         userRepository.save(user);
         return new UpdateResponse("description updated successfully");
     }
 
     public UpdateResponse modifyImage(User user, byte[] image) {
-        User actual = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
-        var oldImage = imageRepository.findById(actual.getImage().getId()).orElseThrow(() -> new IllegalArgumentException("image " + actual.getImage().getId() + " not found"));
+        var username = user.getUsername();
+        User actual = userRepository.findById(user.getId()).orElseThrow(() -> Exceptions.userNotFound(username));
+        var oldImage = imageRepository.findById(actual.getImage().getId()).orElseThrow(() -> Exceptions.imageNotFound(actual.getImage().getId()));
         oldImage.setImage(image);
         imageRepository.save(oldImage);
         return new UpdateResponse("image updated successfully");
     }
 
     public UpdateResponse modifyGames(User user, List<String> games) {
-        User actual = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
+        var username = user.getUsername();
+        User actual = userRepository.findById(user.getId()).orElseThrow(() -> Exceptions.userNotFound(username));
         Set<Game> newGames= new HashSet<>();
-        games.forEach(g -> newGames.add(gameRepository.findByGameName(g).orElseThrow(() -> new IllegalArgumentException("game " + g + " doesn't exist"))));
+        games.forEach(g -> newGames.add(gameRepository.findByGameName(g).orElseThrow(() -> Exceptions.gameNotFound(g))));
         actual.setGames(newGames);
         userRepository.save(actual);
         return new UpdateResponse("games updated successfully");

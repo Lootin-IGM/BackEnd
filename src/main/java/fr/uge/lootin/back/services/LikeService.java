@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.LikeResponse;
+import fr.uge.lootin.back.exception.Exceptions;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.Like;
 import fr.uge.lootin.back.models.Match;
@@ -31,11 +32,7 @@ public class LikeService {
         }
         var testLike = likeRepository.findByUserIdAndUserLikedId(user.getId(), userIdLiked);
         var testMatch = likeRepository.findByUserIdAndUserLikedId(userIdLiked, user.getId());
-        var userLikedOpt = userRepository.findById(userIdLiked);
-        if (userLikedOpt.isEmpty()){
-            return new LikeResponse(false, true);
-        }
-        var userLiked = userLikedOpt.get();
+        var userLiked = userRepository.findById(userIdLiked).orElseThrow(() -> Exceptions.userNotFound(userIdLiked));
         if (!testMatch.isEmpty()){
             likeRepository.save(new Like(user, userLiked));
             createMatch(user, userLiked);

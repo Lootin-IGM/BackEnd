@@ -2,6 +2,7 @@ package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.AllGamesDto;
 import fr.uge.lootin.back.dto.GameDto;
+import fr.uge.lootin.back.exception.Exceptions;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.Image;
 import fr.uge.lootin.back.models.User;
@@ -27,7 +28,7 @@ public class GameService {
     private UserService userService;
 
     public Game save(GameDto game) {
-        Image image = imageService.getImage(game.getImageId()).orElseThrow(() -> new IllegalArgumentException("Image " + game.getImageId() + " doesn't exist"));
+        Image image = imageService.getImage(game.getImageId()).orElseThrow(() -> Exceptions.imageNotFound(game.getImageId()));
         Game saveGame = new Game(game.getGameName(), image);
         return gameRepository.save(saveGame);
     }
@@ -43,7 +44,7 @@ public class GameService {
     }
 
     public AllGamesDto getGamesForUser(User user) {
-        User actual = userService.getById(user.getId()).orElseThrow(() -> new IllegalArgumentException("user " + user.getUsername() + " doesn't exist"));
+        User actual = userService.getById(user.getId()).orElseThrow(() -> Exceptions.userNotFound(user.getUsername()));
         AllGamesDto res = new AllGamesDto(new ArrayList<>(actual.getGames()));
         return res;
     }
