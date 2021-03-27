@@ -1,6 +1,7 @@
 package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.*;
+import fr.uge.lootin.back.exception.Exceptions;
 import fr.uge.lootin.back.models.Match;
 import fr.uge.lootin.back.models.Message;
 import fr.uge.lootin.back.models.User;
@@ -62,21 +63,17 @@ public class MessageService {
     }
 
     private Match verifyMatch(Long matchId, User user) {
-        var oMatch = matchRepository.findById(matchId);
+        var match = matchRepository.findById(matchId).orElseThrow(() -> Exceptions.matchNotFound(matchId));
 
-        if (oMatch.isEmpty()){
-            throw new IllegalArgumentException();
-        }
-        var match = oMatch.get();
         if (!(match.getUser1().getId() == user.getId() || match.getUser2().getId() == user.getId())){
-            throw new IllegalArgumentException();
+            throw Exceptions.INVALID_MATCH;
         }
         return match;
     }
 
 
     public MessageResponse getById(Long id) {
-        var msg = messageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        var msg = messageRepository.findById(id).orElseThrow(() -> Exceptions.messageNotFound(id));
         return new MessageResponse(msg);
     }
 }

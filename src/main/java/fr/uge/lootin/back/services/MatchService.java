@@ -4,6 +4,7 @@ import fr.uge.lootin.back.dto.MatchRequest;
 import fr.uge.lootin.back.dto.MatchResponse;
 import fr.uge.lootin.back.dto.MessageResponse;
 import fr.uge.lootin.back.dto.UserResponse;
+import fr.uge.lootin.back.exception.Exceptions;
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.Match;
 import fr.uge.lootin.back.models.Message;
@@ -53,14 +54,11 @@ public class MatchService {
     //TODO ne get que les nouveaux matchs
     //TODO utiliser un matchDto
     public List<Match> getMatchs(User principal) {
+        var username = principal.getUsername();
         List<User> users = new ArrayList<>();
         List<Match> matchs = new ArrayList<>();
-        Optional<User> p = userRepository.findByLoginUsername(principal.getUsername());
-        /*
-        p.get().getGames().forEach(x -> userRepository.findByGamesGameName(x.getGameName()).forEach(y -> users.add(y)));
-
-        users.forEach(x -> matchs.add(new Match(p.get(), x)));*/
-        p.get().getGames().forEach(x -> findMatchWithGame(p.get(), x, matchs));
+        var p = userRepository.findByLoginUsername(principal.getUsername()).orElseThrow(() -> Exceptions.userNotFound(username));
+        p.getGames().forEach(x -> findMatchWithGame(p, x, matchs));
         return matchs;
     }
 
