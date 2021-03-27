@@ -7,6 +7,7 @@ import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.GameRepository;
 import fr.uge.lootin.back.repositories.ImageRepository;
+import fr.uge.lootin.back.repositories.MatchRepository;
 import fr.uge.lootin.back.repositories.UserRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,25 +28,39 @@ public class ProfileService {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    private MatchRepository matchRepository;
+
     public LiteProfileResponse getLiteProfile(User user) {
         var userId = user.getId();
         user = userRepository.findById(userId).orElseThrow(() -> Exceptions.userNotFound(userId));
-        List<User> tmp;
+        List<User> userPotentialMatches;
+
+        var userMatches = matchRepository.getUserAlreadyMatch(userId);
+        var userIdMatches = new ArrayList<Long>();
+
+        for (var m : userMatches){
+            if (m.getUser1().getId() == userId){
+                userIdMatches.add(m.getUser2().getId());
+            }else{
+                userIdMatches.add(m.getUser1().getId());
+            }
+        }
 
         switch (user.getAttraction()){
-            case MEN : tmp = userRepository.findDistinctByGamesInAndGender(user.getGames(), User.Gender.MALE); break;
-            case WOMEN : tmp = userRepository.findDistinctByGamesInAndGender(user.getGames(), User.Gender.FEMALE); break;
-            case BOTH : tmp = userRepository.findDistinctByGamesIn(user.getGames()); break;
+            case MEN : userPotentialMatches = userRepository.findDistinctByGamesInAndGender(user.getGames(), User.Gender.MALE); break;
+            case WOMEN : userPotentialMatches = userRepository.findDistinctByGamesInAndGender(user.getGames(), User.Gender.FEMALE); break;
+            case BOTH : userPotentialMatches = userRepository.findDistinctByGamesIn(user.getGames()); break;
             default:
                 throw Exceptions.attractionNotFound(user.getAttraction().toString());
         }
 
         var res = new LiteProfileResponse();
         List<UserResponse> users = new ArrayList<>();
-        Collections.shuffle(tmp);
+        Collections.shuffle(userPotentialMatches);
         var cpt = 0;
-        for (var u : tmp) {
-            if (u.getId() != userId) {
+        for (var u : userPotentialMatches) {
+            if (u.getId() != userId && !userIdMatches.contains(u.getId())) {
                 users.add( new UserResponse(u));
                 ++cpt;
             }
