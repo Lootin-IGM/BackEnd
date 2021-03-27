@@ -1,14 +1,16 @@
 package fr.uge.lootin.back.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class GameDto {
     private String gameName;
-    private Long imageId;
+    private MultipartFile file;
 
     public GameDto(){}
 
-    public GameDto(String gameName, Long imageId) {
+    public GameDto(String gameName, MultipartFile file) {
         this.gameName = gameName;
-        this.imageId = imageId;
+        this.file = file;
     }
 
     public String getGameName() {
@@ -19,19 +21,18 @@ public class GameDto {
         this.gameName = gameName;
     }
 
-    public Long getImageId() {
-        return imageId;
+    public MultipartFile getFile() {
+        return file;
     }
 
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 
     @Override
     public String toString() {
         return "GameDto{" +
                 "gameName='" + gameName + '\'' +
-                ", imageId=" + imageId +
                 '}';
     }
 }

@@ -9,7 +9,9 @@ import fr.uge.lootin.back.models.User;
 import fr.uge.lootin.back.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +29,11 @@ public class GameService {
     @Autowired
     private UserService userService;
 
-    public Game save(GameDto game) {
-        Image image = imageService.getImage(game.getImageId()).orElseThrow(() -> Exceptions.imageNotFound(game.getImageId()));
-        Game saveGame = new Game(game.getGameName(), image);
+    public Game save(String name, MultipartFile file) throws IOException {
+        byte[] imageByte = file.getBytes();
+        Image image = new Image(name, imageByte);
+        Image savedImage = imageService.save(image);
+        Game saveGame = new Game(name, savedImage);
         return gameRepository.save(saveGame);
     }
 
