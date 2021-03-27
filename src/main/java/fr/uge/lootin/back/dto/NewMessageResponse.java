@@ -10,13 +10,13 @@ public class NewMessageResponse {
     private Long id;
     private Long sender;
 
-    private String sendTime;
+    private Timestamp sendTime;
 
     private String message;
 
     private TypeMessage typeMessage;
 
-    public NewMessageResponse(Long id, Long sender, String sendTime, String message, TypeMessage typeMessage) {
+    public NewMessageResponse(Long id, Long sender, Timestamp sendTime, String message, TypeMessage typeMessage) {
         this.id = id;
         this.sender = sender;
         this.sendTime = sendTime;
@@ -32,13 +32,13 @@ public class NewMessageResponse {
     public NewMessageResponse(Message message, User user) {
         this.id = message.getMatch().getId();
         this.sender = user.getId();
-        this.sendTime = message.getSendTime().toString();
+        this.sendTime = message.getSendTime();
         this.message = message.getMessage();
         this.typeMessage = TypeMessage.TEXT;
     }
 
     public static NewMessageResponse createFromMessage(Message message){
-        return new NewMessageResponse(message.getId(), message.getUser().getId(),message.getSendTime().toString(),message.getMessage(), message.getTypeMessage() );
+        return new NewMessageResponse(message.getId(), message.getUser().getId(),message.getSendTime(),message.getMessage(), message.getTypeMessage() );
     }
 
     public Long getId() {
@@ -57,12 +57,20 @@ public class NewMessageResponse {
         this.sender = sender;
     }
 
-    public String getSendTime() {
+    public Timestamp getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(String sendTime) {
+    public void setSendTime(Timestamp sendTime) {
         this.sendTime = sendTime;
+    }
+
+    public TypeMessage getTypeMessage() {
+        return typeMessage;
+    }
+
+    public void setTypeMessage(TypeMessage typeMessage) {
+        this.typeMessage = typeMessage;
     }
 
     public String getMessage() {

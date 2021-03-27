@@ -40,16 +40,7 @@ public class MessageService {
         System.out.println("après la requete les rhey");
         System.out.println(res.toString());
 
-        /*
-        List<MessageResponse> resultat = new ArrayList<MessageResponse>();
-
-        res.forEach(m -> resultat.add(MessageMapper.INSTANCE.toMessageResponse(m)));
-
-        return resultat;
-
-         */
         return res.stream().map(MessageMapper.INSTANCE::toMessageResponse).collect(Collectors.toList());
-        //return res.stream().map(MessageResponse::createFromMessage).collect(Collectors.toList());
     }
 
 
