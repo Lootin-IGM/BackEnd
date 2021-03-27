@@ -25,6 +25,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+/*TODO laisser cette classe ou regrouper le tout  dans le MessageController ...*/
+
 @Controller
 public class WebSocketsController {
 
@@ -55,24 +57,20 @@ public class WebSocketsController {
 
     @MessageMapping("/bonjour")
     public void sendToMessage(NewMessageRequest messageRequest) throws Exception {
-        System.out.println("hello greeting text controller method called");
+        System.out.println("new message text controller method called");
         log(messageRequest.getText(), messageRequest.getSender());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
 
-        Long userId = Long.valueOf(currentPrincipalName);
-        if(userId != messageRequest.getSender()) return;
-
-        var optUser = userService.getById(userId);
-        if(optUser.isEmpty()) return;
+        Long userId = Long.valueOf(authentication.getName());
+        if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
 
         // check id
-        if(userId != messageRequest.getSender()) return;
-        // check user is in match
-        var optMatch = verifyUserMatch(messageRequest.getMatchId(), userId);
-        if(optUser.isEmpty()) return;
+        var user = userService.getById(messageRequest.getSender()).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
 
-        Message message = messageService.newMessage(messageRequest.getText(), optMatch.get(), optUser.get(), TypeMessage.TEXT);
+        // check user is in match
+        var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
+
+        Message message = messageService.newMessage(messageRequest.getText(), match, user, TypeMessage.TEXT);
         simpMessagingTemplate.convertAndSendToUser(
                 messageRequest.getMatchId().toString(),
                 "/text",
@@ -81,26 +79,31 @@ public class WebSocketsController {
 
     @MessageMapping("/picture")
     public void sendToPicture(NewMessagePictureRequest messageRequest) throws Exception {
-        System.out.println("hello greeting picture controller method called");
+        System.out.println("new message picture controller method called");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        System.out.println("Current user : " + currentPrincipalName);
+
 
         // check user
 
-        Long userId = Long.valueOf(currentPrincipalName);
-        if(userId != messageRequest.getSender()) return;
-
-        var optUser = userService.getById(userId);
-        if(optUser.isEmpty()) return;
+        Long userId = Long.valueOf(authentication.getName());
+        if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
 
         // check id
-        if(userId != messageRequest.getSender()) return;
-        // check user is in match
-        var optMatch = verifyUserMatch(messageRequest.getMatchId(), userId);
-        if(optUser.isEmpty()) return;
+        var user = userService.getById(userId).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
 
-        Message message = messageService.newMessage(messageRequest.getPicture(), optMatch.get(), optUser.get(), TypeMessage.AUDIO);
+        // check user is in match
+        var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
+
+
+        System.out.println("CREATION MESSAGE");
+        Message m = new Message(match,  messageRequest.getPicture() , user, TypeMessage.AUDIO);
+
+
+        System.out.println("AVANT INSeRT");
+
+        Message message = messageService.save(m);
+        ///System.out.println("APRES INSeRT");
+
         simpMessagingTemplate.convertAndSendToUser(
                 messageRequest.getMatchId().toString(),
                 "/picture",

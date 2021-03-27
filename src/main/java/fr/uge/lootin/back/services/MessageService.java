@@ -1,7 +1,7 @@
 package fr.uge.lootin.back.services;
 
 import fr.uge.lootin.back.dto.*;
-import fr.uge.lootin.back.exception.Exceptions;
+import fr.uge.lootin.back.mappers.MessageMapper;
 import fr.uge.lootin.back.models.Match;
 import fr.uge.lootin.back.models.Message;
 import fr.uge.lootin.back.models.User;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -29,51 +29,25 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    /**
-     * TODO supprimer ça
-     * @param newMessageRequest
-     * @param user
-     * @return
-     */
-    public NewMessageResponse newMessageOLD(NewMessageRequest newMessageRequest, User user){
-        var match = verifyMatch(newMessageRequest.getMatchId(), user);
-        var msg = save(new Message(match, newMessageRequest.getText(), user, TypeMessage.TEXT));
-        MatchResponse mr;
-        if (match.getUser1().getId() == user.getId()){
-            return new NewMessageResponse(msg, match.getUser2());
-        }else{
-            return new NewMessageResponse(msg, match.getUser1());
-        }
-    }
-
     public Message newMessage(String content, Match match, User user, TypeMessage typeMessage){
         return save(new Message(match, content, user, typeMessage));
     }
+    public List<MessageResponse> findByMatchId(Long matchId, int pages, int sizePage){
+        var page = PageRequest.of(pages, sizePage, Sort.by("sendTime").descending());
+        System.out.println("avant requete pour les avoir");
 
-    public List<MessageResponse> findByMatchId(MessageRequest messageRequest, User user){
-        verifyMatch(messageRequest.getMatchId(), user);
-        var page = PageRequest.of(messageRequest.getPage(), messageRequest.getNb(), Sort.by("sendTime").descending());
+        var res = messageRepository.findByMatchId(matchId, page);
+        System.out.println("après la requete les rhey");
+        System.out.println(res.toString());
 
-        var res = messageRepository.findByMatchId(messageRequest.getMatchId(), page);
-        var formatRes = new ArrayList<MessageResponse>();
-        for (var m  : res){
-            formatRes.add(new MessageResponse(m));
-        }
-        return formatRes;
+        return res.stream().map(MessageMapper.INSTANCE::toMessageResponse).collect(Collectors.toList());
     }
 
-    private Match verifyMatch(Long matchId, User user) {
-        var match = matchRepository.findById(matchId).orElseThrow(() -> Exceptions.matchNotFound(matchId));
 
-        if (!(match.getUser1().getId() == user.getId() || match.getUser2().getId() == user.getId())){
-            throw Exceptions.INVALID_MATCH;
-        }
-        return match;
-    }
 
 
     public MessageResponse getById(Long id) {
-        var msg = messageRepository.findById(id).orElseThrow(() -> Exceptions.messageNotFound(id));
-        return new MessageResponse(msg);
+        var msg = messageRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return MessageMapper.INSTANCE.toMessageResponse(msg);
     }
 }

@@ -5,6 +5,8 @@ import fr.uge.lootin.back.dto.MatchResponse;
 import fr.uge.lootin.back.dto.MessageResponse;
 import fr.uge.lootin.back.dto.UserResponse;
 import fr.uge.lootin.back.exception.Exceptions;
+import fr.uge.lootin.back.mappers.MessageMapper;
+
 import fr.uge.lootin.back.models.Game;
 import fr.uge.lootin.back.models.Match;
 import fr.uge.lootin.back.models.Message;
@@ -76,7 +78,7 @@ public class MatchService {
             listMessage = messageRepository.findByMatchId(m.getId(), page);
             if(!listMessage.isEmpty()){
                 lastMessage = listMessage.get(0);
-                messageResponse = new MessageResponse(lastMessage);
+                messageResponse = MessageMapper.INSTANCE.toMessageResponse(lastMessage);
             }else{
                 messageResponse = null;
             }
@@ -114,20 +116,20 @@ public class MatchService {
 
         List<Message> listMessage;
         Message lastMessage;
-        MessageResponse messageResponse;
+        MessageResponse messageResponseOLD;
         var formatRes = new ArrayList<MatchResponse>();
         for (var m  : res){
             listMessage = messageRepository.findByMatch_IdOrderBySendTimeDesc(m.getId());
             if(!listMessage.isEmpty()){
                 lastMessage = listMessage.get(0);
-                messageResponse = new MessageResponse(lastMessage);
+                messageResponseOLD = MessageMapper.INSTANCE.toMessageResponse(lastMessage);
             }else{
-                messageResponse = null;
+                messageResponseOLD = null;
             }
             if (m.getUser1().getId() == user.getId()){
-                formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2()), messageResponse));
+                formatRes.add(new MatchResponse(m.getId(), new UserResponse(m.getUser2()), messageResponseOLD));
             }else{
-                formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1()), messageResponse));
+                formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1()), messageResponseOLD));
             }
         }
 

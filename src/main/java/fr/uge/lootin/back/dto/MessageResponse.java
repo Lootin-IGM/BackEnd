@@ -1,31 +1,50 @@
 package fr.uge.lootin.back.dto;
 
 import fr.uge.lootin.back.models.Message;
+import fr.uge.lootin.back.utils.TypeMessage;
 
 import java.sql.Timestamp;
 
 public class MessageResponse {
     private Long id;
+    private Long sender;
+
     private Timestamp sendTime;
 
     private String message;
 
-    private UserResponse sender;
+    private TypeMessage typeMessage;
 
-    public MessageResponse(Long id, Timestamp sendTime, String message, UserResponse sender) {
+    public MessageResponse(Long id, Timestamp sendTime, String message, Long sender, TypeMessage typeMessage) {
         this.id = id;
         this.sendTime = sendTime;
         this.message = message;
         this.sender = sender;
+        this.typeMessage = typeMessage;
     }
 
-    public MessageResponse(Message message) {
-        this.id = message.getId();
-        this.sender = new UserResponse(message.getUser());
-        this.sendTime = message.getSendTime();
-        this.message = message.getMessage();
+
+    public static MessageResponse createFromMessage(Message message){
+        return new MessageResponse(message.getId(), message.getSendTime(), message.getMessage(), message.getUser().getId(),message.getTypeMessage());
     }
 
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSender() {
+        return sender;
+    }
+
+    public void setSender(Long sender) {
+        this.sender = sender;
+    }
 
     public Timestamp getSendTime() {
         return sendTime;
@@ -43,19 +62,11 @@ public class MessageResponse {
         this.message = message;
     }
 
-    public UserResponse getSender() {
-        return sender;
+    public TypeMessage getTypeMessage() {
+        return typeMessage;
     }
 
-    public void setSender(UserResponse sender) {
-        this.sender = sender;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setTypeMessage(TypeMessage typeMessage) {
+        this.typeMessage = typeMessage;
     }
 }
