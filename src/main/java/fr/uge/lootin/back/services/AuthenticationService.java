@@ -59,7 +59,7 @@ public class AuthenticationService {
         System.out.println("received Username : " + loginRequest.getUsername() + " password : " + loginRequest.getPassword());
         User user = userService.loadUserByUsername(loginRequest.getUsername());
         final String jtwToken = jwtUtil.generateToken(user);
-        return new LoginResponse(jtwToken);
+        return new LoginResponse(jtwToken, user.getChannelToken(), user.getId());
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) throws IOException {
@@ -67,14 +67,13 @@ public class AuthenticationService {
         Login login = new Login();
         Image image = new Image();
         System.out.println("username : " + registerRequest.getUsername() + " " + "password : " + registerRequest.getPassword() + " " + "firstname : " + registerRequest.getFirstName() + " " + "lastname : " + registerRequest.getLastName() + " " + "games : " + registerRequest.getGames());
-        /*
-        user.setUsername(registerRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));*/
+
         image.setName(registerRequest.getUsername());
         byte[] imageGetted = registerRequest.getFile().getBytes();
         image.setImage(imageGetted);
         login.setUsername(registerRequest.getUsername());
         login.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setChannelToken(java.util.UUID.randomUUID().toString());
         user.setAuthority(User.Authority.USER);
         user.setLogin(login);
         user.setFirstName(registerRequest.getFirstName());

@@ -35,12 +35,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String jwt = null;
 
         // Extraction du token depuis le header
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")){
+        if (authorizationHeader != null && authorizationHeader.length() > 7 && authorizationHeader.startsWith("Bearer")){
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUserName(jwt);
         }
         // Si pas déjà authentifié
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){ User user = this.userService.loadUserByUsername(username);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            User user = this.userService.loadUserByUsername(username);
 
             // vérification du token
             if (jwtUtil.validateToken(jwt, user)){

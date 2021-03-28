@@ -27,6 +27,8 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    private String channelToken;
+
     @NotNull
     private String firstName;
 
@@ -71,7 +73,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String firstName, String lastName, Set<Game> games, Login login, Gender gender, int age, String description, Image image, Attraction attraction, String email) {
+    public User(String firstName, String lastName, Set<Game> games, Login login, Gender gender, int age, String description, Image image, Attraction attraction, String email, String channelToken) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.games = games;
@@ -82,6 +84,7 @@ public class User implements UserDetails {
         this.image = image;
         this.attraction = attraction;
         this.email = email;
+        this.channelToken = channelToken;
     }
 
     public String getEmail() {
@@ -172,23 +175,44 @@ public class User implements UserDetails {
         this.description = description;
     }
 
+    public String getChannelToken() {
+        return channelToken;
+    }
+
+    public void setChannelToken(String channelToken) {
+        this.channelToken = channelToken;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && age == user.age && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(games, user.games) && Objects.equals(login, user.login) && authority == user.authority && gender == user.gender && Objects.equals(description, user.description);
+        return id == user.id &&
+                age == user.age &&
+                Objects.equals(channelToken, user.channelToken) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(games, user.games) &&
+                Objects.equals(login, user.login) &&
+                authority == user.authority &&
+                gender == user.gender &&
+                Objects.equals(description, user.description) &&
+                Objects.equals(image, user.image) &&
+                attraction == user.attraction;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, games, login, authority, gender, age, description);
+        return Objects.hash(id, channelToken, firstName, lastName, email, games, login, authority, gender, age, description, image, attraction);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", channelToken='" + channelToken + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

@@ -26,11 +26,29 @@ public class JwtUtil {
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
         final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        System.out.println("dacccc");
+        T t =  claimsResolver.apply(claims);
+        System.out.println("ah oeeee");
+
+        return t;
     }
 
     private Claims extractAllClaims(String token){
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        System.out.println("alllooooooooooooo ?");
+        Claims claim = null;
+        try{
+            System.out.println("hey ?");
+
+            claim = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+            System.out.println("oeee ?");
+
+        }catch (Exception e){
+            System.out.println("exception handled : " + e.toString());
+
+        }
+        System.out.println("okayyy ?");
+
+        return claim;
     }
 
     private Boolean isTokenExpired(String token){
