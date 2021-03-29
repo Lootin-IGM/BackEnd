@@ -16,6 +16,7 @@ import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,6 +56,7 @@ public class WebSocketsController {
         System.out.println("sender -> : " +sender);
     }
 
+    @Transactional
     @MessageMapping("/bonjour")
     public void sendToMessage(NewMessageRequest messageRequest) throws Exception {
         System.out.println("new message text controller method called");
@@ -70,13 +72,20 @@ public class WebSocketsController {
         // check user is in match
         var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
 
-        Message message = messageService.newMessage(messageRequest.getText(), match, user, TypeMessage.TEXT);
+        System.out.println("LE MATCH EN QUESTION ---> " + match);
+        
+        Message m = new Message(match,  messageRequest.getText() , user, TypeMessage.TEXT);
+
+        System.out.println("AVANT INSeRT");
+
+        Message message = messageService.save(m);
         simpMessagingTemplate.convertAndSendToUser(
                 messageRequest.getMatchId().toString(),
                 "/text",
                 NewMessageResponse.createFromMessage(message));
     }
 
+    @Transactional
     @MessageMapping("/picture")
     public void sendToPicture(NewMessagePictureRequest messageRequest) throws Exception {
         System.out.println("new message picture controller method called");

@@ -22,8 +22,7 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
-    @Autowired
-    private MatchRepository matchRepository;
+
 
     public Message save(Message message) {
         return messageRepository.save(message);
@@ -32,6 +31,7 @@ public class MessageService {
     public Message newMessage(String content, Match match, User user, TypeMessage typeMessage){
         return save(new Message(match, content, user, typeMessage));
     }
+    
     public List<MessageResponse> findByMatchId(Long matchId, int pages, int sizePage){
         var page = PageRequest.of(pages, sizePage, Sort.by("sendTime").descending());
         System.out.println("avant requete pour les avoir");
@@ -40,7 +40,9 @@ public class MessageService {
         System.out.println("après la requete les rhey");
         System.out.println(res.toString());
 
-        return res.stream().map(MessageMapper.INSTANCE::toMessageResponse).collect(Collectors.toList());
+        return res.stream().map(MessageResponse::createFromMessage).collect(Collectors.toList());
+        //return res.stream().map(MessageMapper.INSTANCE::toMessageResponse).collect(Collectors.toList());
+
     }
 
 
@@ -48,6 +50,7 @@ public class MessageService {
 
     public MessageResponse getById(Long id) {
         var msg = messageRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        return MessageMapper.INSTANCE.toMessageResponse(msg);
+        return MessageResponse.createFromMessage(msg);
+        //return MessageMapper.INSTANCE.toMessageResponse(msg);
     }
 }

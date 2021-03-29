@@ -56,7 +56,7 @@ public class AuthenticationService {
         } catch (BadCredentialsException e){
             throw Exceptions.INVALID_CREDENTIALS;
         }
-        System.out.println("received Username : " + loginRequest.getUsername() + " password : " + loginRequest.getPassword());
+        System.out.println("received valid Username : " + loginRequest.getUsername() + " password : " + loginRequest.getPassword());
         User user = userService.loadUserByUsername(loginRequest.getUsername());
         final String jtwToken = jwtUtil.generateToken(user);
         return new LoginResponse(jtwToken);

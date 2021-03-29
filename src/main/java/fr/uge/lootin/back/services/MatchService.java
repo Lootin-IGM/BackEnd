@@ -122,7 +122,7 @@ public class MatchService {
             listMessage = messageRepository.findByMatch_IdOrderBySendTimeDesc(m.getId());
             if(!listMessage.isEmpty()){
                 lastMessage = listMessage.get(0);
-                messageResponseOLD = MessageMapper.INSTANCE.toMessageResponse(lastMessage);
+                messageResponseOLD = MessageResponse.createFromMessage(lastMessage);
             }else{
                 messageResponseOLD = null;
             }

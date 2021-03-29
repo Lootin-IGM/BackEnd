@@ -15,8 +15,8 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "matchId")
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "matchId")//@JoinTable(name = "Message_match", joinColumns = { @JoinColumn(name = "message_id")}, inverseJoinColumns = {@JoinColumn(name = "match_id")})
     private Match match;
 
     @Column(name = "sendTime")
@@ -29,10 +29,12 @@ public class Message {
     @NotNull
     private String message;
 
-    @ManyToOne
-    @JoinColumn(name = "senderId")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinTable(name = "Message_user", joinColumns = { @JoinColumn(name = "message_id")}, inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    //@JoinColumn(name = "senderId")
     private User user;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="type_message")
     private TypeMessage typeMessage;
 
