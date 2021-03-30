@@ -34,11 +34,8 @@ public class MessageService {
     
     public List<MessageResponse> findByMatchId(Long matchId, int pages, int sizePage){
         var page = PageRequest.of(pages, sizePage, Sort.by("sendTime").descending());
-        System.out.println("avant requete pour les avoir");
 
         var res = messageRepository.findByMatchId(matchId, page);
-        System.out.println("après la requete les rhey");
-        System.out.println(res.toString());
 
         return res.stream().map(MessageResponse::createFromMessage).collect(Collectors.toList());
         //return res.stream().map(MessageMapper.INSTANCE::toMessageResponse).collect(Collectors.toList());

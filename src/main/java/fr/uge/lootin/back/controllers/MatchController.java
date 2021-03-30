@@ -28,6 +28,7 @@ public class MatchController {
 
     @Autowired
     private SimpUserRegistry simpUserRegistry;
+
     @Autowired
     private MatchService matchService;
 
@@ -55,13 +56,11 @@ public class MatchController {
         return ResponseEntity.ok(new ListMatches(matchService.getMatchesLastMsgPage(user, matchRequest)));
     }
 
+    //TODO
     @GetMapping("/test/{id}")
     public void test(@PathVariable Long id) throws Exception {
-        System.out.println("hello greeting controller method called");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        System.out.println("Current user : " + currentPrincipalName);
-        System.out.println("Connected users : " + simpUserRegistry.getUsers());
         LocalDateTime now = LocalDateTime.now();
         simpMessagingTemplate.convertAndSendToUser(id.toString(), "/notification", new Notification("match", "new match"));
     }

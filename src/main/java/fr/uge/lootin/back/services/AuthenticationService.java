@@ -57,7 +57,6 @@ public class AuthenticationService {
         } catch (BadCredentialsException e){
             throw Exceptions.INVALID_CREDENTIALS;
         }
-        System.out.println("received valid Username : " + loginRequest.getUsername() + " password : " + loginRequest.getPassword());
         User user = userService.loadUserByUsername(loginRequest.getUsername());
         final String jtwToken = jwtUtil.generateToken(user);
         return new LoginResponse(jtwToken, user.getChannelToken(), user.getId());
@@ -75,7 +74,6 @@ public class AuthenticationService {
         User user = new User();
         Login login = new Login();
         Image image = new Image();
-        System.out.println("username : " + registerRequest.getUsername() + " " + "password : " + registerRequest.getPassword() + " " + "firstname : " + registerRequest.getFirstName() + " " + "lastname : " + registerRequest.getLastName() + " " + "games : " + registerRequest.getGames());
 
         image.setName(registerRequest.getUsername());
         byte[] imageGetted = registerRequest.getFile().getBytes();
@@ -104,7 +102,7 @@ public class AuthenticationService {
 
         Set<Game> targetSet = new HashSet<>();
         //TODO a améliorer avec l'Optional
-        registerRequest.getGames().forEach(x -> {System.out.println("game=" + x); targetSet.add(gameRepository.findByGameName(x).orElseThrow(() -> new IllegalArgumentException("game " + x + " doesn't exist")));});
+        registerRequest.getGames().forEach(x -> {System.out.println("game=" + x);  targetSet.add(gameRepository.findByGameName(x).orElseThrow(() -> new IllegalArgumentException("game " + x + " doesn't exist")));});
         user.setGames(targetSet);
         imageRepository.save(image);
         userRepository.save(user);

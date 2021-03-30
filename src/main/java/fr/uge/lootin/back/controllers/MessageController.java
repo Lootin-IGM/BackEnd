@@ -31,23 +31,15 @@ public class MessageController {
      */
     @GetMapping("/{matchId}/{nb}/{page}")
     public ResponseEntity<ListMessageResponse> getMsgPage(@PathVariable Long matchId, @PathVariable Integer page, @PathVariable Integer nb) {
-        System.out.println("ON VEUT DES MESSAGES EN BALLES");
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            System.out.println("Héhé on est content");
 
 
-            System.out.println("vérifie match");
             verifyMatch(matchId, user);
-            System.out.println("match ok");
-            System.out.println("On choppe les messages");
 
             var res = messageService.findByMatchId(matchId,page, nb);
-            System.out.println("on envoie");
-            System.out.println(res);
             return ResponseEntity.ok(new ListMessageResponse(res));
         } catch (IllegalArgumentException e){
-            System.out.println("on meurt");
             return ResponseEntity.badRequest().build();
         }
     }

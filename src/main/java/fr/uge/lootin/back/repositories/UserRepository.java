@@ -20,7 +20,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     List<User> findByGamesGameName(String gameName);
 
-    //possible opti get only userId
     List<User> findDistinctByGamesIn(Set<Game> games);
 
     List<User> findDistinctByGamesInAndGender(Set<Game> games, User.Gender gender);

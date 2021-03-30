@@ -41,7 +41,6 @@ public class LikeController {
         var res = likeService.addLike(user, likeRequest.getUserLikedId());
         if (res.isNewMatch()) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println("loot detected between :" + Long.valueOf(user.getId()).toString() + " and " + likeRequest.getUserLikedId().toString());
 
             simpMessagingTemplate.convertAndSendToUser(Long.valueOf(user.getId()).toString(), "/notification", new Notification("loot", likeRequest.getUserLikedId().toString()));
             simpMessagingTemplate.convertAndSendToUser(likeRequest.getUserLikedId().toString(), "/notification", new Notification("loot", "0"));
