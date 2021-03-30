@@ -55,15 +55,15 @@ public class MatchController {
         return ResponseEntity.ok(new ListMatches(matchService.getMatchesLastMsgPage(user, matchRequest)));
     }
 
-    @GetMapping("/test")
-    public void test() throws Exception {
+    @GetMapping("/test/{id}")
+    public void test(@PathVariable Long id) throws Exception {
         System.out.println("hello greeting controller method called");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         System.out.println("Current user : " + currentPrincipalName);
         System.out.println("Connected users : " + simpUserRegistry.getUsers());
         LocalDateTime now = LocalDateTime.now();
-        simpMessagingTemplate.convertAndSendToUser("4", "/notification", new Notification("match", "new match"));
+        simpMessagingTemplate.convertAndSendToUser(id.toString(), "/notification", new Notification("match", "new match"));
     }
 
 

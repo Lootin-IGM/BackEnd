@@ -20,7 +20,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Ici que le client se connecte en premier lieu pour le handshake
-        registry.addEndpoint("/secured/room").setAllowedOrigins("http://localhost:8080");
+        registry.addEndpoint("/secured/room").setAllowedOrigins("*");
+        //registry.addEndpoint("/secured/room").setAllowedOrigins("http://localhost:8080");
+
     }
 
 }

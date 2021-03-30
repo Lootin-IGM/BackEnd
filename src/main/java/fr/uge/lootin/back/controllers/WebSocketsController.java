@@ -64,7 +64,7 @@ public class WebSocketsController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Long userId = Long.valueOf(authentication.getName());
-        if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
+        //if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
 
         // check id
         var user = userService.getById(messageRequest.getSender()).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
@@ -95,7 +95,7 @@ public class WebSocketsController {
         // check user
 
         Long userId = Long.valueOf(authentication.getName());
-        if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
+        //if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
 
         // check id
         var user = userService.getById(userId).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
