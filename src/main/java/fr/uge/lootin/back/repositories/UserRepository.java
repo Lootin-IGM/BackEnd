@@ -15,6 +15,8 @@ import java.util.Set;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByLoginUsername(String username);
+    
+    Optional<User> findByEmail(String email);
 
     List<User> findByGamesGameName(String gameName);
 
@@ -22,4 +24,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findDistinctByGamesIn(Set<Game> games);
 
     List<User> findDistinctByGamesInAndGender(Set<Game> games, User.Gender gender);
+   
 }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -63,6 +64,14 @@ public class AuthenticationService {
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) throws IOException {
+    	Optional<User> testUser = userRepository.findByLoginUsername(registerRequest.getUsername());
+    	if(!testUser.isEmpty()) {
+    		throw Exceptions.usernameAlreadyExist(registerRequest.getUsername());
+    	}
+    	testUser = userRepository.findByEmail(registerRequest.getEmail());
+    	if(!testUser.isEmpty()) {
+    		throw Exceptions.emailAlreadyExist(registerRequest.getEmail());
+    	}
         User user = new User();
         Login login = new Login();
         Image image = new Image();

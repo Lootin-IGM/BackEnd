@@ -45,6 +45,14 @@ public final class Exceptions {
     public static NotFoundException attractionNotFound(String attraction) {
         return new NotFoundException("Attraction " + attraction + " doesn't exist", 404006);
     }
+    
+    public static BadRequestException usernameAlreadyExist(String username) {
+        return new BadRequestException("Username " + username + " already exist", 404007);
+    }
+    
+    public static BadRequestException emailAlreadyExist(String email) {
+        return new BadRequestException("Email " + email + " already used", 404008);
+    }
 
 
     private Exceptions() {
