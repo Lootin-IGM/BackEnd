@@ -36,4 +36,5 @@ public class ImageController {
         var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.of(imageService.getMyImage(user));
     }
+
 }

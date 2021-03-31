@@ -2,14 +2,18 @@ package fr.uge.lootin.back.controllers;
 
 
 import fr.uge.lootin.back.dto.*;
+import fr.uge.lootin.back.models.Image;
 import fr.uge.lootin.back.models.Match;
 import fr.uge.lootin.back.models.Message;
 import fr.uge.lootin.back.models.User;
+import fr.uge.lootin.back.services.ImageService;
 import fr.uge.lootin.back.services.MatchService;
 import fr.uge.lootin.back.services.MessageService;
 import fr.uge.lootin.back.services.UserService;
 import fr.uge.lootin.back.utils.TypeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
@@ -17,14 +21,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 /*TODO laisser cette classe ou regrouper le tout  dans le MessageController ...*/
 
@@ -46,6 +56,9 @@ public class WebSocketsController {
 
     @Autowired
     private MatchService matchService;
+    
+    @Autowired
+    private ImageService imageService;
 
     private void log(String text, Long sender){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -82,21 +95,21 @@ public class WebSocketsController {
         simpMessagingTemplate.convertAndSendToUser(
                 messageRequest.getMatchId().toString(),
                 "/text",
-                NewMessageResponse.createFromMessage(message));
+                NewMessageResponse.createFromMessage(message)); 
     }
 
     @Transactional
-    @MessageMapping("/picture")
-    public void sendToPicture(NewMessagePictureRequest messageRequest) throws Exception {
+    @PostMapping("/picture")
+    public ResponseEntity<Message> sendToPicture(NewMessagePictureRequest messageRequest) throws Exception {
         System.out.println("new message picture controller method called");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 
         // check user
 
-        Long userId = Long.valueOf(authentication.getName());
         //if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
 
+        Long userId = messageRequest.getSender();
         // check id
         var user = userService.getById(userId).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
 
@@ -105,7 +118,8 @@ public class WebSocketsController {
 
 
         System.out.println("CREATION MESSAGE");
-        Message m = new Message(match,  messageRequest.getPicture() , user, TypeMessage.AUDIO);
+        byte[] image = messageRequest.getPicture().getBytes();
+        Message m = new Message(match,  Base64.getEncoder().encodeToString(image) , user, TypeMessage.PICTURE);
 
 
         System.out.println("AVANT INSeRT");
@@ -116,8 +130,49 @@ public class WebSocketsController {
         simpMessagingTemplate.convertAndSendToUser(
                 messageRequest.getMatchId().toString(),
                 "/picture",
-                NewMessageResponse.createFromMessage(message));
+                new NewMessagePictureResponse(m.getId(),match.getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
+    
+    
+    /*
+         @Transactional
+    @PostMapping("/picture")
+    public ResponseEntity<Message> sendToPicture(NewMessagePictureRequest messageRequest) throws Exception {
+        System.out.println("new message picture controller method called");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        // check user
+
+        //if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
+
+        Long userId = messageRequest.getSender();
+        // check id
+        var user = userService.getById(userId).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
+
+        // check user is in match
+        var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
+
+
+        System.out.println("CREATION MESSAGE");
+        byte[] image = messageRequest.getPicture().getBytes();
+        Message m = new Message(match,  Base64.getEncoder().encodeToString(image) , user, TypeMessage.PICTURE);
+
+
+        System.out.println("AVANT INSeRT");
+
+        Message message = messageService.save(m);
+        ///System.out.println("APRES INSeRT");
+
+        simpMessagingTemplate.convertAndSendToUser(
+                messageRequest.getMatchId().toString(),
+                "/picture",
+                new Message(match, "image received", user, TypeMessage.PICTURE));
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+    }
+     */
+    
 
     private Optional<Match> verifyUserMatch(Long matchId, Long userId) {
         var oMatch = matchService.findById(matchId);

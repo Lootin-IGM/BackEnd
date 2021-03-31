@@ -33,6 +33,13 @@ public class ProfileController {
 
         return ResponseEntity.ok(res);
     }
+    
+    @GetMapping("simple/{id}")
+    public ResponseEntity<UserResponse> getSimpleProfileById(@PathVariable String id) {
+        var res = profileService.getSimpleProfileById(Long.valueOf(id));
+
+        return ResponseEntity.ok(res);
+    }
 
     @PostMapping("/description")
     public ResponseEntity<UpdateResponse> modifyDescription(@RequestBody UpdateDescription description) {

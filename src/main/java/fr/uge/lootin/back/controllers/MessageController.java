@@ -53,6 +53,18 @@ public class MessageController {
     public ResponseEntity<MessageResponse> getMessageById(@PathVariable Long id){
         return ResponseEntity.ok(messageService.getById(id));
     }
+    
+    @GetMapping("picture/{match}/{id}")
+    public ResponseEntity<MessageResponse> getMessageByIdAndMatch(@PathVariable Long match, @PathVariable Long id){
+    	 var user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+         try {
+             verifyMatch(match, user);
+
+             return ResponseEntity.ok(messageService.getById(id));
+         } catch (IllegalArgumentException e){
+             return ResponseEntity.badRequest().build();
+         }    	
+    }
 
     private Match verifyMatch(Long matchId, User user) {
         var oMatch = matchRepository.findById(matchId);

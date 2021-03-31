@@ -74,6 +74,11 @@ public class ProfileService {
         var user = userRepository.findById(id).orElseThrow(() -> Exceptions.userNotFound(id));
         return new FullProfileResponse(user);
     }
+    
+    public UserResponse getSimpleProfileById(Long id) {
+        var user = userRepository.findById(id).orElseThrow(() -> Exceptions.userNotFound(id));
+        return new UserResponse(user);
+    }
 
     public UpdateResponse modifyDescription(User user, String description) {
         var username = user.getUsername();

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +43,15 @@ public class MessageService {
 
     }
 
-
+/*
+    public MessageResponse findByIdAndMatchId(Long match, Long id){
+    	var message = messageRepository.findMessageByIdAndAndMatch(id, match);
+    	if(message == null) {
+    		throw new IllegalArgumentException("id and match not valid");
+    	}
+    	return  MessageResponse.createFromMessage(message);
+    }
+    */
 
 
     public MessageResponse getById(Long id) {

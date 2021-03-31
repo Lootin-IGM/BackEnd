@@ -14,4 +14,7 @@ public interface MessageRepository extends CrudRepository<Message, Long> {
     List<Message> findByMatch_Id(Long id, Pageable pageable);
 
     List<Message> findByMatch_IdOrderBySendTimeDesc(Long id);
+    
+//    Message findMessageByIdAndAndMatch(Long id, Long match);
+ 
 }

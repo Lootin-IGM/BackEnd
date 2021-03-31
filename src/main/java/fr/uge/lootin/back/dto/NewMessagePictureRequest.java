@@ -3,11 +3,11 @@ package fr.uge.lootin.back.dto;
 import org.springframework.web.multipart.MultipartFile;
 
 public class NewMessagePictureRequest {
-    private String picture;
+    private MultipartFile picture;
     private Long matchId;
     private Long sender;
 
-    public NewMessagePictureRequest(String picture, Long matchId, Long sender) {
+    public NewMessagePictureRequest(MultipartFile picture, Long matchId, Long sender) {
         this.picture = picture;
         this.matchId = matchId;
         this.sender = sender;
@@ -24,11 +24,11 @@ public class NewMessagePictureRequest {
         this.sender = sender;
     }
 
-    public String getPicture() {
+    public MultipartFile getPicture() {
         return picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(MultipartFile picture) {
         this.picture = picture;
     }
 
