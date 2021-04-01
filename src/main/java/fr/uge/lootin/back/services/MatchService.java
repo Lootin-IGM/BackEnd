@@ -133,6 +133,10 @@ public class MatchService {
             }
         }
 
+        formatRes.sort((a, b) -> {
+            return b.getLastMessage().getSendTime().compareTo(a.getLastMessage().getSendTime());
+        } );
+
         return formatRes;
     }
 
