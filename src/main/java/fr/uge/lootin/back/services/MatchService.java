@@ -110,7 +110,7 @@ public class MatchService {
     }
 
     public List<MatchResponse> getMatchesLastMsgPage(User user, MatchRequest matchRequest){
-        var page = PageRequest.of(matchRequest.getPage(), matchRequest.getNbMatches(), Sort.by("msg.sendTime").descending());
+        var page = PageRequest.of(matchRequest.getPage(), matchRequest.getNbMatches(), Sort.by("msg.id").descending());
 
         var res =  matchRepository.getMatchesLastMsg(user.getId(), page);
 
@@ -132,6 +132,10 @@ public class MatchService {
                 formatRes.add(new MatchResponse(m.getId(),new UserResponse(m.getUser1()), messageResponseOLD));
             }
         }
+
+        formatRes.sort((a, b) -> {
+            return b.getLastMessage().getSendTime().compareTo(a.getLastMessage().getSendTime());
+        } );
 
         return formatRes;
     }
