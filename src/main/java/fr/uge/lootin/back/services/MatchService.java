@@ -110,16 +110,18 @@ public class MatchService {
     }
 
     public List<MatchResponse> getMatchesLastMsgPage(User user, MatchRequest matchRequest){
-        var page = PageRequest.of(matchRequest.getPage(), matchRequest.getNbMatches(), Sort.by("msg.id").descending());
+        var page = PageRequest.of(matchRequest.getPage(), matchRequest.getNbMatches(), Sort.by("msg.sendTime").descending());
 
-        var res =  matchRepository.getMatchesLastMsg(user.getId(), page);
+        var res =  matchRepository.getMatchesLastMsg(user.getId());
 
         List<Message> listMessage;
         Message lastMessage;
         MessageResponse messageResponseOLD;
         var formatRes = new ArrayList<MatchResponse>();
-        for (var m  : res){
+        for (var m  : res){ //
+            //listMessage = messageRepository.findByMatch_Id(m.getId(), PageRequest.of(0, 1, Sort.by("sendTime").descending()));
             listMessage = messageRepository.findByMatch_IdOrderBySendTimeDesc(m.getId());
+
             if(!listMessage.isEmpty()){
                 lastMessage = listMessage.get(0);
                 messageResponseOLD = MessageResponse.createFromMessage(lastMessage);
@@ -133,11 +135,11 @@ public class MatchService {
             }
         }
 
-        formatRes.sort((a, b) -> {
-            return b.getLastMessage().getSendTime().compareTo(a.getLastMessage().getSendTime());
-        } );
+       
+        formatRes.sort((a, b) -> { return b.getLastMessage().getSendTime().compareTo(a.getLastMessage().getSendTime());} );
+        
 
-        return formatRes;
+        return formatRes.subList(matchRequest.getPage() * matchRequest.getNbMatches() , Math.min(formatRes.size(), matchRequest.getPage() * matchRequest.getNbMatches() + matchRequest.getNbMatches() ));
     }
 
 }

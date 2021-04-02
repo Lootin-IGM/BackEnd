@@ -23,6 +23,9 @@ public interface MatchRepository extends CrudRepository<Match, Long> {
     @Query("select distinct ma from _Match ma join Message msg on msg.match.id = ma.id where (ma.user1.id = :userId or ma.user2.id = :userId ) ")
     List<Match> getMatchesLastMsg(@Param("userId") Long userId, Pageable pageable);
 
+    @Query("select distinct ma from _Match ma join Message msg on msg.match.id = ma.id where (ma.user1.id = :userId or ma.user2.id = :userId ) ")
+    List<Match> getMatchesLastMsg(@Param("userId") Long userId);
+
     @Query("select distinct ma from _Match ma where (ma.user1.id = :userId or ma.user2.id = :userId ) ")
     List<Match> getUserAlreadyMatch(@Param("userId") Long userId);
 

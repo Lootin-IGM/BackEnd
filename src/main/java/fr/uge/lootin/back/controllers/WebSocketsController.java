@@ -77,7 +77,6 @@ public class WebSocketsController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Long userId = Long.valueOf(authentication.getName());
-        //if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
 
         // check id
         var user = userService.getById(messageRequest.getSender()).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
@@ -121,15 +120,10 @@ public class WebSocketsController {
 
 
         Long otherID = (match.getUser1().getId() != userId) ? match.getUser1().getId() : match.getUser2().getId();
-        System.out.println("CREATION MESSAGE");
         byte[] image = messageRequest.getPicture().getBytes();
         Message m = new Message(match,  Base64.getEncoder().encodeToString(image) , user, TypeMessage.PICTURE);
 
-
-        System.out.println("AVANT INSeRT");
-
         Message message = messageService.save(m);
-        ///System.out.println("APRES INSeRT");
         
         simpMessagingTemplate.convertAndSendToUser(otherID.toString(), "/notification", new Notification("message", "0"));
 
