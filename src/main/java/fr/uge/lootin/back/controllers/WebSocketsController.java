@@ -85,11 +85,14 @@ public class WebSocketsController {
         // check user is in match
         var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
 
-        System.out.println("LE MATCH EN QUESTION ---> " + match);
         
         Message m = new Message(match,  messageRequest.getText() , user, TypeMessage.TEXT);
+        Long otherID = (match.getUser1().getId() != userId) ? match.getUser1().getId() : match.getUser2().getId();
 
-        System.out.println("AVANT INSeRT");
+
+        
+        simpMessagingTemplate.convertAndSendToUser(otherID.toString(), "/notification", new Notification("message", "0"));
+
 
         Message message = messageService.save(m);
         simpMessagingTemplate.convertAndSendToUser(
@@ -117,6 +120,7 @@ public class WebSocketsController {
         var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
 
 
+        Long otherID = (match.getUser1().getId() != userId) ? match.getUser1().getId() : match.getUser2().getId();
         System.out.println("CREATION MESSAGE");
         byte[] image = messageRequest.getPicture().getBytes();
         Message m = new Message(match,  Base64.getEncoder().encodeToString(image) , user, TypeMessage.PICTURE);
@@ -126,6 +130,9 @@ public class WebSocketsController {
 
         Message message = messageService.save(m);
         ///System.out.println("APRES INSeRT");
+        
+        simpMessagingTemplate.convertAndSendToUser(otherID.toString(), "/notification", new Notification("message", "0"));
+
 
         simpMessagingTemplate.convertAndSendToUser(
                 messageRequest.getMatchId().toString(),
@@ -134,45 +141,7 @@ public class WebSocketsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     
-    
-    /*
-         @Transactional
-    @PostMapping("/picture")
-    public ResponseEntity<Message> sendToPicture(NewMessagePictureRequest messageRequest) throws Exception {
-        System.out.println("new message picture controller method called");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-
-        // check user
-
-        //if(userId != messageRequest.getSender()) throw new IllegalArgumentException("User" + userId + " doesn't exist");
-
-        Long userId = messageRequest.getSender();
-        // check id
-        var user = userService.getById(userId).orElseThrow(() -> new IllegalArgumentException("User" + userId + " doesn't exist"));
-
-        // check user is in match
-        var match = verifyUserMatch(messageRequest.getMatchId(), userId).orElseThrow(() -> new IllegalArgumentException("you have not match with id" + messageRequest.getMatchId()));
-
-
-        System.out.println("CREATION MESSAGE");
-        byte[] image = messageRequest.getPicture().getBytes();
-        Message m = new Message(match,  Base64.getEncoder().encodeToString(image) , user, TypeMessage.PICTURE);
-
-
-        System.out.println("AVANT INSeRT");
-
-        Message message = messageService.save(m);
-        ///System.out.println("APRES INSeRT");
-
-        simpMessagingTemplate.convertAndSendToUser(
-                messageRequest.getMatchId().toString(),
-                "/picture",
-                new Message(match, "image received", user, TypeMessage.PICTURE));
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
-    }
-     */
-    
+       
 
     private Optional<Match> verifyUserMatch(Long matchId, Long userId) {
         var oMatch = matchService.findById(matchId);
