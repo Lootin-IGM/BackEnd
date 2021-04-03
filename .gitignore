@@ -27,3 +27,17 @@ hs_err_pid*
 .idea
 target
 
+.classpath
+.gitignore
+.gitignore
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.jdt.core.prefs
+bin/src/main/resources/hibernate.cfg.xml
+bin/src/main/resources/Game.hbm.xml
+bin/src/main/resources/Match.hbm.xml
+bin/src/main/resources/User.hbm.xml
+bin/src/main/resources/Message.hbm.xml
+bin/README.md
+bin/pom.xml
+.project
+bin/.settings/org.eclipse.core.resources.prefs
