@@ -28,6 +28,7 @@
 ## About The Project
 Here is the Lootin's BackEnd application which follows a REST architecture.
 It contains all the "reflection" behind the Front application and ensures the connection to the SQL database.
+It's recommended to use this application with the "Front" repository of Lootin-IGM organization.
 
 ### Developed with
 * [Java](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html)
